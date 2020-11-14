@@ -50,5 +50,17 @@ function splitify(str) {
 console.log(splitify("Hello World,I-am code"));
 
 
+//below is a freeCodeCamp exercise that is supposed to utilize .join, .split and a .reduce function (either map or filter)
+//the goal is to take an input sentence, and convert it to url version (lowercase, hyphenated).
+function urlSlug(title) {
+    trimmedTitle =title.trim();
+    var array=trimmedTitle.split(/ +/); //regular expression is needed for condition with multiple spaces between words
+    var modArray=array.map(index=> index.toLowerCase());
+    return modArray.join("-")
+
+}
+console.log(urlSlug("Hold-the-door"));
+
+
 
 
