@@ -50,7 +50,6 @@ function splitify(str) {
 console.log(splitify("Hello World,I-am code"));
 
 
-//below is a freeCodeCamp exercise that is supposed to utilize .join, .split and a .reduce function (either map or filter)
 //the goal is to take an input sentence, and convert it to url version (lowercase, hyphenated).
 function urlSlug(title) {
     trimmedTitle =title.trim();
@@ -62,5 +61,135 @@ function urlSlug(title) {
 console.log(urlSlug("Hold-the-door"));
 
 
+// The every method works with arrays to check if every element passes a particular test.
+//     It returns a Boolean value - true if all values meet the criteria, false if not.
+//     For example, the following code would check if every element in the numbers array is less than 10:
+//
+// var numbers = [1, 5, 8, 0, 10, 11];
+// numbers.every(function(currentValue) {
+//     return currentValue < 10;
+// });
+// Returns false
+
+function checkPositive(arr) {
+    // Only change code below this line
+    console.log(arr);
+    return arr.every(x => x>0);
+    // arr.every(function(x){
+    //     console.log(x + "is greater than 0: " + (x>0))
+    //     return x>0;
+    // })
+    // Only change code above this line
+}
+console.log(checkPositive([1, 2, 3, 4, 5]));
+
+// The some method works with arrays to check if any element passes a particular test.
+//     It returns a Boolean value - true if any of the values meet the criteria, false if not.
+//     For example, the following code would check if any element in the numbers array is less than 10:
+//
+// var numbers = [10, 50, 8, 220, 110, 11];
+// numbers.some(function(currentValue) {
+//     return currentValue < 10;
+// });
+// Returns true
+
+function checkPositive2(arr) {
+    // Only change code below this line
+    return arr.some(x=>x>0)
+
+    // Only change code above this line
+}
+console.log(checkPositive2([1, 2, 3, -4, 5]));
 
 
+// The arity of a function is the number of arguments it requires. Currying a function means to convert
+// a function of N arity into N functions of arity 1.
+// In other words, it restructures a function so it takes one argument, then returns another function
+// that takes the next argument, and so on.
+//
+//     Here's an example:
+//
+// //Un-curried function
+// function unCurried(x, y) {
+//     return x + y;
+// }
+//
+// //Curried function
+// function curried(x) {
+//     return function(y) {
+//         return x + y;
+//     }
+// }
+// //Alternative using ES6
+// const curried = x => y => x + y
+//
+// curried(1)(2) // Returns 3
+// This is useful in your program if you can't supply all the arguments to a function at one time. ' +
+// 'You can save each function call into a variable, which will hold the returned function reference that takes ' +
+// 'the next argument when it's available.
+
+    function add(x) {
+    // Only change code below this line
+        return function(y){
+            return function(z){
+                return x+y+z;
+            }
+        }
+    // Only change code above this line
+}
+console.log(add(10)(20)(30));
+
+// We'll pass you an array of two numbers. Return the sum of those two numbers plus the sum of all the numbers ' +
+// 'between them. The lowest number will not always come first.
+//
+// For example, sumAll([4,1]) should return 10 because sum of all the numbers between 1 and 4 (both inclusive) is 10.
+
+function sumAll(arr) {
+    var total=0;
+    if (arr[0]<arr[1]){
+        var i = arr[0]
+        while (i<= arr[1]){
+            total+=i;
+            i++;
+        }
+    } else{
+        i = arr[1];
+        while (i<= arr[0]){
+            total+=i;
+            i++;
+        }
+    }
+    return total;
+
+}
+
+console.log(sumAll([1, 4]));
+
+//Compare two arrays and return a new array with any items only found in one of the two given arrays,
+   // but not both. In other words, return the symmetric difference of the two arrays.
+
+function diffArray(arr1, arr2) {
+    var arr1Copy=[...arr1];
+    var arr2Copy=[...arr2];
+    var newArr = arr1Copy.filter(word=>arr2.indexOf(word)===-1);
+    var newArray2= arr2Copy.filter(word=>arr1.indexOf(word)===-1);
+
+
+    return newArr.concat(newArray2);
+}
+
+console.log(diffArray([1, 2, 3, 5], [1, 2, 3, 4, 5]));
+
+// You will be provided with an initial array (the first argument in the destroyer function),
+// followed by one or more arguments. Remove all elements from the initial array that are of the same
+// value as these arguments.
+
+function destroyer(...args) {
+    var arrCopy=[...args[0]];
+        while (arrCopy.includes(args)) {
+            arrCopy.splice(arrCopy.indexOf(args), 1);
+            console.log(arrCopy);
+        }
+}
+
+console.log(destroyer([1, 2, 3, 1, 2, 3], 2, 3));
