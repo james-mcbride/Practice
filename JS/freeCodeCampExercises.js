@@ -186,10 +186,87 @@ console.log(diffArray([1, 2, 3, 5], [1, 2, 3, 4, 5]));
 
 function destroyer(...args) {
     var arrCopy=[...args[0]];
-        while (arrCopy.includes(args)) {
-            arrCopy.splice(arrCopy.indexOf(args), 1);
-            console.log(arrCopy);
+    for (var i=1; i<args.length; i++) {
+        while (arrCopy.includes(args[i])) {
+            arrCopy.splice(arrCopy.indexOf(args[i]), 1);
         }
+    }
+    return arrCopy;
 }
 
 console.log(destroyer([1, 2, 3, 1, 2, 3], 2, 3));
+
+
+
+function whatIsInAName(collection, source) {
+    var arr = [];
+
+    const sourceKeys=Object.keys(source);
+    arr=collection.filter(function(object){
+        for (var i=0; i<sourceKeys.length; i++) {
+
+            if (!object.hasOwnProperty(sourceKeys[i]) || (object[sourceKeys[i]] !==source[sourceKeys[i]]) ){
+                return false;
+            }
+        }
+        return true;
+        })
+
+
+
+    // Only change code above this line
+    return arr;
+}
+
+//console.log(whatIsInAName([{ first: "Romeo", last: "Montague" }, { first: "Mercutio", last: null }, { first: "Tybalt", last: "Capulet" }], { last: "Capulet" }));
+//console.log(whatIsInAName([{ "apple": 1 }, { "apple": 1 }, { "apple": 1, "bat": 2 }], { "apple": 1 }));
+//console.log(whatIsInAName([{ "apple": 1, "bat": 2 }, { "bat": 2 }, { "apple": 1, "bat": 2, "cookie": 2 }], { "apple": 1, "bat": 2 }))
+//console.log(whatIsInAName([{ "apple": 1, "bat": 2 }, { "apple": 1 }, { "apple": 1, "bat": 2, "cookie": 2 }], { "apple": 1, "cookie": 2 }))
+
+function spinalCase(str) {
+    var arr=str.split(/\s|(?=[A-Z])|-|_/);
+    console.log(arr);
+    return arr.map(function(x){
+        return x.toLowerCase();
+    }).join("-")
+}
+
+//console.log(spinalCase('ThisIsSpinalTap'));
+//console.log(spinalCase("TheAndyGriffith_Show"));
+//console.log(spinalCase("AllThe-small Things"));
+
+
+// Pig Latin is a way of altering English Words. The rules are as follows:
+//
+//     - If a word begins with a consonant, take the first consonant or
+// consonant cluster, move it to the end of the word, and add "ay" to it.
+//
+// - If a word begins with a vowel, just add "way" at the end.
+//
+//     Translate the provided string to Pig Latin. Input strings are guaranteed to be
+// English words in all lowercase.
+
+function translatePigLatin(str) {
+    var testRegex=/[^aeiou]/;
+    var vowelTest=/[aeiou]/;
+    var arr=str.split("");
+    console.log(arr);
+    console.log(testRegex.test(arr[0]))
+    var i=0;
+        if (!vowelTest.test(str)){
+            arr.push("ay");
+        } else if (testRegex.test(arr[i])) {
+            while (testRegex.test(arr[i])) {
+                arr.push(arr[0]);
+                arr.shift();
+            }
+            arr.push("ay");
+        } else {
+            arr.push("way");
+        }
+    return arr.join("")
+}
+
+console.log(translatePigLatin("glove"));
+console.log(translatePigLatin("rhythm"));
+
