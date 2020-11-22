@@ -269,4 +269,231 @@ function translatePigLatin(str) {
 
 console.log(translatePigLatin("glove"));
 console.log(translatePigLatin("rhythm"));
+//Perform a search and replace on the sentence using the arguments provided and return the new sentence.
+//
+// First argument is the sentence to perform the search and replace on.
+//
+// Second argument is the word that you will be replacing (before).
+//
+// Third argument is what you will be replacing the second argument with (after).
+
+function myReplace(str, before, after) {
+    var beforeArray=before.split("");
+    var afterArray=after.split("");
+    if (beforeArray[0].toUpperCase()==beforeArray[0]){
+        afterArray[0]=afterArray[0].toUpperCase()
+    } else {
+        afterArray[0]=afterArray[0].toLowerCase()
+    }
+    after=afterArray.join("");
+    return str.replace(before,after)
+}
+
+console.log(myReplace("A quick brown fox jumped over the lazy dog", "jumped", "Leaped"));
+
+//The DNA strand is missing the pairing element. Take each character, get its pair, and return the results as a 2d array.
+//
+// Base pairs are a pair of AT and CG. Match the missing element to the provided character.
+//
+// Return the provided character as the first element in each array.
+//
+// For example, for the input GCG, return [["G", "C"], ["C","G"],["G", "C"]]
+//
+// The character and its pair are paired up in an array, and all the arrays are grouped into one encapsulating array.
+
+function pairElement(str) {
+    var arr=str.split("");
+    return arr.map(function(x){
+        if (x==="G"){
+            return ["G","C"];
+        } else if(x==="C"){
+            return ["C","G"];
+        } else if(x==="A"){
+            return ["A","T"];
+        } else{
+            return ["T","A"];
+        }
+    })
+}
+
+console.log(pairElement("GCG"));
+
+
+//Find the missing letter in the passed letter range and return it.
+//
+// If all letters are present in the range, return undefined.
+
+function fearNotLetter(str) {
+    var alphabet="abcdefghijklmnopqrstuvwxyz";
+    var alphabetArray=alphabet.split("");
+    var strArray=str.split("")
+    var startingLetter=alphabetArray.indexOf(strArray[0]);
+    for (var k=0; k<str.length; k++){
+        if (strArray[k]!== alphabetArray[startingLetter]){
+            return alphabetArray[startingLetter]
+        } else{
+            startingLetter++
+        }
+
+    }
+    return undefined;
+}
+
+console.log(fearNotLetter("abce"));
+console.log(fearNotLetter("stvwx"));
+
+//Write a function that takes two or more arrays and returns a new array of unique values in the order of the original provided arrays.
+//
+// In other words, all values present from all arrays should be included in their original order, but with no duplicates in the final array.
+//
+// The unique numbers should be sorted by their original order, but the final array should not be sorted in numerical order.
+
+function uniteUnique(...args) {
+    var combinedArray=[];
+    for (var i=0; i<args.length; i++){
+        combinedArray.push(...args[i]);
+    }
+    var finalArray=combinedArray.filter(function(x,i, arr){
+        return arr.indexOf(x)==i;
+    })
+    return finalArray;
+}
+
+console.log(uniteUnique([1, 3, 2], [5, 2, 1, 4], [2, 1]));
+console.log(uniteUnique([1, 2, 3], [5, 2, 1]));
+
+//Convert the characters &, <, >, " (double quote), and ' (apostrophe), in a string to their
+// corresponding HTML entities.
+
+function convertHTML(str) {
+    var arr=str.split("");
+    var converted=arr.map(function(x){
+        if(x=="&"){
+            return "&amp"
+        } else if(x==='"'){
+            return '&quot'
+        } else if (x==="'"){
+            return "&#039"
+        } else if(x==="<"){
+            return "&lt"
+        } else if(x===">"){
+            return "&gt"
+        } else{
+            return x
+        }
+    })
+     return converted.join("")
+    }
+
+console.log(convertHTML("Dolce & Gabbana"));
+
+//Given a positive integer num, return the sum of all odd Fibonacci numbers that are less than or equal to num.
+//
+// The first two numbers in the Fibonacci sequence are 1 and 1. Every additional number in the sequence is the sum
+// of the two previous numbers. The first six numbers of the Fibonacci sequence are 1, 1, 2, 3, 5 and 8.
+
+function sumFibs(num) {
+    var sum=2;
+    var arr=[1,1];
+    var i =1;
+    if (num===1){
+        return 1;
+    }
+    if (num===2){
+        return 4;
+    }
+    do{
+        i++;
+        arr[i]=arr[i-1]+arr[i-2]
+    }
+    while (arr[i]<=num){
+
+
+    }
+    console.log(arr);
+
+
+    return arr.reduce(function(sum,x){
+        console.log("sum is: "+sum, "x is: " +x)
+        if(x<=num && x%2!==0){
+            return sum+x;
+        } else{
+            return sum
+        }
+    },0);
+}
+
+console.log(sumFibs(75025));
+
+//A prime number is a whole number greater than 1 with exactly two divisors: 1 and itself. For example,
+// 2 is a prime number because it is only divisible by 1 and 2. In contrast, 4 is not prime since it is
+// divisible by 1, 2 and 4.
+//
+// Rewrite sumPrimes so it returns the sum of all prime numbers that are less than or equal to num.
+
+function sumPrimes(num) {
+    var array = [];
+    for (var i = 2; i <= num; i++) {
+        array.push(i);
+    }
+    console.log(array);
+    return array.reduce(function (sum,x) {
+        var primeNum=0;
+        console.log("sum=" +sum, "x= " + x)
+
+        for (var i = 2; i < x; i++) {
+            if (x % i === 0) {
+                primeNum++
+            }
+        }
+        if (primeNum === 0) {
+            return sum+x;
+        } else{
+            return sum;
+        }
+    },0)
+}
+
+
+console.log(sumPrimes(977));
+
+//Find the smallest common multiple of the provided parameters that can be evenly divided by both,
+// as well as by all sequential numbers in the range between these parameters.
+//
+// The range will be an array of two numbers that will not necessarily be in numerical order.
+//
+// For example, if given 1 and 3, find the smallest common multiple of both 1 and 3 that is also evenly
+// divisible by all numbers between 1 and 3. The answer here would be 6.
+
+function smallestCommons(arr) {
+    var arrCopy=[...arr];
+    if (arrCopy[0]>arrCopy[arr.length-1]){
+        arrCopy.reverse();
+    }
+    for (var i=arrCopy[0]; i<=arrCopy[1]; i++){
+         arrCopy.push(i)
+    }
+    arrCopy.splice(0,2);
+    console.log(arrCopy)
+
+    var lowestMultiple=0;
+    var multipleTotal=0;
+    while(multipleTotal<arrCopy.length){
+        lowestMultiple++;
+        multipleTotal=0;
+        for (var i =0; i<arrCopy.length;i++){
+            if (lowestMultiple%arrCopy[i]===0){
+                multipleTotal++;
+            }
+        }
+    }
+    return lowestMultiple;
+
+}
+
+
+console.log(smallestCommons([2,10]));
+
+
+
 
