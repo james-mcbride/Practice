@@ -574,11 +574,71 @@
 //
 // Remember, you can access object properties through either dot notation or [] notation.
 
-function truthCheck(collection, pre) {
-    return pre;
-}
+// function truthCheck(collection, pre) {
+//     var total=collection.reduce(function(total,x){
+//         if (x[pre]){
+//             return total+1;
+//         } else{
+//             return total;
+//         }
+//     }, 0);
+//     return total===collection.length;
+// }
+//
+// console.log(truthCheck([{"user": "Tinky-Winky", "sex": "male"}, {"user": "Dipsy", "sex": "male"}, {"user": "Laa-Laa", "sex": "female"}, {"user": "Po", "sex": "female"}], "sex"))
 
-truthCheck([{"user": "Tinky-Winky", "sex": "male"}, {"user": "Dipsy", "sex": "male"}, {"user": "Laa-Laa", "sex": "female"}, {"user": "Po", "sex": "female"}], "sex");
+//Create a function that sums two arguments together. If only one argument is provided, then return a function
+// that expects one argument and returns the sum.
+//
+// For example, addTogether(2, 3) should return 5, and addTogether(2) should return a function.
+//
+// Calling this returned function with a single argument will then return the sum:
+//
+// var sumTwoAnd = addTogether(2);
+//
+// sumTwoAnd(3) returns 5.
+//
+// If either argument isn't a valid number, return undefined.
+
+
+// function addTogether(...args) {
+//     console.log(args)
+//     if (args.length===2){
+//         if (typeof args[0] ==="number" && typeof args[1] ==="number"){
+//             return args[0]+args[1];
+//         } else{
+//             return undefined;
+//         }
+//     } else{
+//         if (typeof args[0]=== "number"){
+//             return function(x){
+//                 return x +args[0];
+//             }
+//         } else{
+//             return undefined;
+//         }
+//     }
+// }
+function addTogether(x,y){
+    if (x &&y){
+        if (typeof x==="number" &&typeof y==="number"){
+            return x+y
+        } else{
+            return undefined;
+        }
+    } else{
+        if (x==="number"){
+            return function(z){
+                return z+x;
+            }
+        } else{
+            return undefined;
+        }
+    }
+}
+console.log(addTogether(2,3));
+console.log(addTogether(5)(7));
+console.log(addTogether(2)([3]));
 
 
 
