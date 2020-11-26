@@ -100,72 +100,80 @@
 
 const maxMirror = (array) => {
     console.log(array);
-    //counter will count current mirror streak
+    //counter will count current mirror streak.
     var counter=0;
-    //scoreKeeperArray will log each mirror streak
+    //scoreKeeperArray will log each mirror streak final counter.
     var scoreKeeperArray=[];
     //forwardIndex will hold the index i of the last mirrored element in the outer forward loop
     var forwardIndex=0;
     //backward index will hold the index j of the last mirrored element in the inner backwards loop
     var backwardIndex=0;
+    //will hold the j-value of the beginning of a mirror streak, to allow us to go back to where we left off afterwards
+    var mirrorSequenceInnerLoopStart=0;
+    //will hold the i-value of the beginning of a mirror streak, to allow us to go back to where we left off afterward.
+    var mirrorSequenceOuterloopStart=0;
 
     for (var i=0; i<array.length; i++){
-        //exitInnerLoop will skip the remainder of the inner loop after a match is found.
+        //exitInnerLoop will skip the remainder of the inner loop after a match is found and a mirror streak begins.
         var exitInnerLoop=0;
         for (var j=array.length-1; j>=0; j--){
-            //will exit out of current innerLoop if a current mirror is being pursued
-
+            //will skip to the mirror streak inner loop index if a streak is going on and you are on the next outer loop index
             if (counter>0 && exitInnerLoop===0){
                 j=backwardIndex-1;
             }
+            //will exit out of current innerLoop if a current mirror streak is being pursued
             if (exitInnerLoop>0){
                 console.log("We have found a match and are skipping to the next i-value")
                 continue;
             }
             console.log("var i = "+ i,"arr[i] = "+ array[i], "var j= "+ j, "array[j]= "+array[j], "forward index = "+ forwardIndex, "backward index = "+backwardIndex, "counter = "+counter );
             //skip loop when i and j land on the same index and you are not in the middle of a mirror streak.
-            if (array[j]===array[i] && i===j &&counter==0){
+            if (array[j]===array[i] && i===j && counter==0){
                 continue;
             } else if (array[j]===array[i]){
                 if (counter===0) {
+                    //will start mirror streak if it is longer than 1
                     if (array[i+1]===array[j-1]){
                         ++counter;
                         forwardIndex = i;
                         backwardIndex = j;
                         exitInnerLoop++;
                         console.log("we have a match!",  "counter= "+counter)
+                        mirrorSequenceInnerLoopStart=j;
+                        mirrorSequenceOuterloopStart=i;
+                     //if mirror streak is only one, it will ignore it and keep going.
                     } else{
                         scoreKeeperArray.push(1);
                         counter=0;
                         exitInnerLoop=0;
                         continue;
                     }
-
+                //will continue mirror streak if it is on the correct inner and outer loop indexes.
                 } else if(i===forwardIndex+1 && j===backwardIndex-1){
-                    console.log("array[i+1]"+array[i+1], "array[j-1" )
+                    console.log("array[i+1]= "+array[i+1], "array[j-1= " +array[j-1] )
                     if (array[i+1]===array[j-1]) {
                         ++counter;
                         forwardIndex = i;
                         backwardIndex = j;
                         exitInnerLoop++;
                         console.log("We have another match and will keep going!", "counter= "+counter)
+                    //will register when mirror streak ends, will add value to the scoreKeeperArray.
+                    //will return inner and outer loop to place where mirror streak started to keep going.
                     } else{
+
                         ++counter;
                         console.log("we have another match, but the buck stops here.", "counter = " +counter)
                         scoreKeeperArray.push(counter);
                         counter=0;
                         exitInnerLoop=0;
+                        j=mirrorSequenceInnerLoopStart;
+                        i=mirrorSequenceOuterloopStart
                         continue;
                     }
                 } else{
                     continue;
-                    // scoreKeeperArray.push(counter);
-                    // counter=1;
-                    // forwardIndex=i;
-                    // backwardIndex=j;
-                    // exitInnerLoop++;
-                    // console.log("well, starting over again with a first match")
                 }
+            //Will reset all values to zero when no mirror value is found.
             } else{
                 counter=0;
                 backwardIndex=0;
@@ -175,10 +183,11 @@ const maxMirror = (array) => {
         }
     }
     scoreKeeperArray.push(counter);
+    //will return the value of the highest streak!
     if (Math.max(...scoreKeeperArray)>1){
         return Math.max(...scoreKeeperArray);
     }else{
         return 0;
     }
 }
-console.log(maxMirror([ 1, 2, 3, 8, 9, 3, 2, 1, 9, 8 ]))
+console.log(maxMirror([ 7, 7, 8, 10, 5, 4, 10, 10, 6, 6, 10, 5, 10, 1, 10, 3, 9, 3, 2, 4 ]))
