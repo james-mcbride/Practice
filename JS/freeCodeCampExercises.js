@@ -601,44 +601,79 @@
 // If either argument isn't a valid number, return undefined.
 
 
-// function addTogether(...args) {
-//     console.log(args)
-//     if (args.length===2){
-//         if (typeof args[0] ==="number" && typeof args[1] ==="number"){
-//             return args[0]+args[1];
+// function addTogether(first,second) {
+//     console.log(first, second)
+//     if (first && second){
+//         if (typeof first ==="number" && typeof second ==="number"){
+//             return first+second;
 //         } else{
 //             return undefined;
 //         }
 //     } else{
-//         if (typeof args[0]=== "number"){
+//         var c=first;
+//         if (typeof c=== "number"){
 //             return function(x){
-//                 return x +args[0];
+//                // console.log(x);
+//                 if (typeof x ==="number") {
+//                     return x + c;
+//                 } else{
+//                     return undefined;
+//                 }
 //             }
 //         } else{
 //             return undefined;
 //         }
 //     }
 // }
-function addTogether(x,y){
-    if (x &&y){
-        if (typeof x==="number" &&typeof y==="number"){
-            return x+y
-        } else{
-            return undefined;
-        }
-    } else{
-        if (x==="number"){
-            return function(z){
-                return z+x;
-            }
-        } else{
-            return undefined;
-        }
+
+// console.log(addTogether(2,3));
+// console.log(addTogether(5)(7));
+// console.log(addTogether(2)([3]));
+
+//Fill in the object constructor with the following methods below:
+//
+// getFirstName()
+// getLastName()
+// getFullName()
+// setFirstName(first)
+// setLastName(last)
+// setFullName(firstAndLast)
+// Run the tests to see the expected output for each method. The methods that take an argument must
+// accept only one argument and it has to be a string. These methods must be the only available means
+// of interacting with the object.
+
+
+var Person = function(firstAndLast) {
+    // Only change code below this line
+    // Complete the method below and implement the others similarly
+    var fullName=firstAndLast;
+
+    this.setFirstName = function(first){
+         fullName=first+ " " + fullName.split(" ")[1]
+    };
+    this.setLastName = function(lastName){
+        fullName=fullName.split(" ")[0] + " " + lastName;
+    };
+    this.setFullName = function(firstAndLast){
+        fullName=firstAndLast;
+    };
+    this.getFirstName =function(){
+        return fullName.split(" ")[0];
     }
-}
-console.log(addTogether(2,3));
-console.log(addTogether(5)(7));
-console.log(addTogether(2)([3]));
+     this.getLastName =function(){
+         return fullName.split(" ")[1];
+     }
+
+    this.getFullName = function() {
+        return fullName;
+    };
+};
+
+var bob = new Person('Bob Ross');
+console.log(bob.getFullName());
+console.log(Object.keys(bob).length);
+console.log(bob.setFirstName("Haskel"));
+console.log(bob.getFullName())
 
 
 
