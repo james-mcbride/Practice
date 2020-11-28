@@ -643,40 +643,91 @@
 // of interacting with the object.
 
 
-var Person = function(firstAndLast) {
-    // Only change code below this line
-    // Complete the method below and implement the others similarly
-    var fullName=firstAndLast;
+// var Person = function(firstAndLast) {
+//     // Only change code below this line
+//     // Complete the method below and implement the others similarly
+//     var fullName=firstAndLast;
+//
+//     this.setFirstName = function(first){
+//          fullName=first+ " " + fullName.split(" ")[1]
+//     };
+//     this.setLastName = function(lastName){
+//         fullName=fullName.split(" ")[0] + " " + lastName;
+//     };
+//     this.setFullName = function(firstAndLast){
+//         fullName=firstAndLast;
+//     };
+//     this.getFirstName =function(){
+//         return fullName.split(" ")[0];
+//     }
+//      this.getLastName =function(){
+//          return fullName.split(" ")[1];
+//      }
+//
+//     this.getFullName = function() {
+//         return fullName;
+//     };
+// };
+//
+// var bob = new Person('Bob Ross');
+// console.log(bob.getFullName());
+// console.log(Object.keys(bob).length);
+// console.log(bob.setFirstName("Haskel"));
+// console.log(bob.getFullName())
 
-    this.setFirstName = function(first){
-         fullName=first+ " " + fullName.split(" ")[1]
-    };
-    this.setLastName = function(lastName){
-        fullName=fullName.split(" ")[0] + " " + lastName;
-    };
-    this.setFullName = function(firstAndLast){
-        fullName=firstAndLast;
-    };
-    this.getFirstName =function(){
-        return fullName.split(" ")[0];
+//Return a new array that transforms the elements' average altitude into their orbital periods (in seconds).
+//
+// The array will contain objects in the format {name: 'name', avgAlt: avgAlt}.
+//
+// You can read about orbital periods on Wikipedia.
+//
+// The values should be rounded to the nearest whole number. The body being orbited is Earth.
+//
+// The radius of the earth is 6367.4447 kilometers, and the GM value of earth is 398600.4418 km3s-2.
+
+// function orbitalPeriod(arr) {
+//     var copyArr=[];
+//     var GM = 398600.4418;
+//     var earthRadius = 6367.4447;
+//     for (var i =0; i<arr.length; i++){
+//         var obj={};
+//         obj.name=arr[i].name;
+//         obj.orbitalPeriod= Number((2*Math.PI* Math.sqrt(((arr[i].avgAlt+earthRadius)**3)/GM)).toFixed(0));
+//         copyArr.push(obj);
+//     }
+//     return copyArr;
+// }
+//
+// console.log(orbitalPeriod([{name: "sputnik", avgAlt: 35873.5553}]));
+// console.log(orbitalPeriod([{name: "iss", avgAlt: 413.6}, {name: "hubble", avgAlt: 556.7}, {name: "moon", avgAlt: 378632.553}]));
+
+//Return true if the given string is a palindrome. Otherwise, return false.
+//
+// A palindrome is a word or sentence that's spelled the same way both forward and backward,
+// ignoring punctuation, case, and spacing.
+
+function palindrome(str) {
+    var arr=str.split("");
+    var newArr=[];
+    for (var i=0; i<arr.length; i++){
+        var testRegex=/[a-zA-Z0-9]/
+        if (testRegex.test(arr[i])){
+            newArr.push(arr[i].toLowerCase())
+        }
     }
-     this.getLastName =function(){
-         return fullName.split(" ")[1];
-     }
-
-    this.getFullName = function() {
-        return fullName;
-    };
-};
-
-var bob = new Person('Bob Ross');
-console.log(bob.getFullName());
-console.log(Object.keys(bob).length);
-console.log(bob.setFirstName("Haskel"));
-console.log(bob.getFullName())
+    var filteredString=newArr.join("")
+    var reverseArr=newArr.reverse();
+    console.log(filteredString);
+    console.log(reverseArr.join(""))
+    return reverseArr.join("")===filteredString
 
 
+}
 
+
+console.log(palindrome("eye"));
+console.log(palindrome("not a palindrome"))
+console.log(palindrome("_eye"));
 
 
 
