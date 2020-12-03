@@ -254,15 +254,15 @@
 //     console.log(testRegex.test(arr[0]))
 //     var i=0;
 //         if (!vowelTest.test(str)){
-//             arr.push("ay");
+//             arr.unshift("ay");
 //         } else if (testRegex.test(arr[i])) {
 //             while (testRegex.test(arr[i])) {
-//                 arr.push(arr[0]);
+//                 arr.unshift(arr[0]);
 //                 arr.shift();
 //             }
-//             arr.push("ay");
+//             arr.unshift("ay");
 //         } else {
-//             arr.push("way");
+//             arr.unshift("way");
 //         }
 //     return arr.join("")
 // }
@@ -351,7 +351,7 @@
 // function uniteUnique(...args) {
 //     var combinedArray=[];
 //     for (var i=0; i<args.length; i++){
-//         combinedArray.push(...args[i]);
+//         combinedArray.unshift(...args[i]);
 //     }
 //     var finalArray=combinedArray.filter(function(x,i, arr){
 //         return arr.indexOf(x)==i;
@@ -434,7 +434,7 @@
 // function sumPrimes(num) {
 //     var array = [];
 //     for (var i = 2; i <= num; i++) {
-//         array.push(i);
+//         array.unshift(i);
 //     }
 //     console.log(array);
 //     return array.reduce(function (sum,x) {
@@ -471,7 +471,7 @@
 //         arrCopy.reverse();
 //     }
 //     for (var i=arrCopy[0]; i<=arrCopy[1]; i++){
-//          arrCopy.push(i)
+//          arrCopy.unshift(i)
 //     }
 //     arrCopy.splice(0,2);
 //     console.log(arrCopy)
@@ -527,14 +527,14 @@
 //     var testRegex=/,/
 //     for (var i=0; i<arrCopy.length; i++){
 //         if (arrCopy[i]==="[object Object]"){
-//             finalArray.push({})
+//             finalArray.unshift({})
 //         } else if(arrCopy[i]===""){
 //             continue;
 //         } else if (!testRegex.test(arrCopy[i])){
 //             if (isNaN(arrCopy[i])) {
-//                 finalArray.push(arrCopy[i])
+//                 finalArray.unshift(arrCopy[i])
 //             } else{
-//                 finalArray.push(Number(arrCopy[i]));
+//                 finalArray.unshift(Number(arrCopy[i]));
 //             }
 //         }
 //     }
@@ -693,7 +693,7 @@
 //         var obj={};
 //         obj.name=arr[i].name;
 //         obj.orbitalPeriod= Number((2*Math.PI* Math.sqrt(((arr[i].avgAlt+earthRadius)**3)/GM)).toFixed(0));
-//         copyArr.push(obj);
+//         copyArr.unshift(obj);
 //     }
 //     return copyArr;
 // }
@@ -706,33 +706,297 @@
 // A palindrome is a word or sentence that's spelled the same way both forward and backward,
 // ignoring punctuation, case, and spacing.
 
-function palindrome(str) {
-    var arr=str.split("");
-    var newArr=[];
-    for (var i=0; i<arr.length; i++){
-        var testRegex=/[a-zA-Z0-9]/
-        if (testRegex.test(arr[i])){
-            newArr.push(arr[i].toLowerCase())
-        }
-    }
-    var filteredString=newArr.join("")
-    var reverseArr=newArr.reverse();
-    console.log(filteredString);
-    console.log(reverseArr.join(""))
-    return reverseArr.join("")===filteredString
+// function palindrome(str) {
+//     var arr=str.split("");
+//     var newArr=[];
+//     for (var i=0; i<arr.length; i++){
+//         var testRegex=/[a-zA-Z0-9]/
+//         if (testRegex.test(arr[i])){
+//             newArr.unshift(arr[i].toLowerCase())
+//         }
+//     }
+//     var filteredString=newArr.join("")
+//     var reverseArr=newArr.reverse();
+//     console.log(filteredString);
+//     console.log(reverseArr.join(""))
+//     return reverseArr.join("")===filteredString
+//
+//
+// }
+//
+//
+// console.log(palindrome("eye"));
+// console.log(palindrome("not a palindrome"))
+// console.log(palindrome("_eye"));
 
+//Convert the given number into a roman numeral.
+//
+// All roman numerals answers should be provided in upper-case.
 
-}
+// function convertToRoman(num) {
+//     var string=num.toString();
+//     var array= string.split("");
+//     var romanArray=[];
+//     if (array.length>=1){
+//         switch(Number(array[array.length-1])){
+//             case 1:
+//                 romanArray.unshift("I");
+//                 break;
+//             case 2:
+//                 romanArray.unshift("II");
+//                 break;
+//             case 3:
+//                 romanArray.unshift("III");
+//                 break;
+//             case 4:
+//                 romanArray.unshift("IV");
+//                 break;
+//             case 5:
+//                 romanArray.unshift("V");
+//                 break;
+//             case 6:
+//                 romanArray.unshift("VI");
+//                 break;
+//             case 7:
+//                 romanArray.unshift("VII");
+//                 break;
+//             case 8:
+//                 romanArray.unshift("VIII");
+//                 break;
+//             case 9:
+//                 romanArray.unshift("IX");
+//                 break;
+//         }
+//
+//     }
+//     if (array.length>=2){
+//         switch(Number(array[array.length-2])){
+//             case 1:
+//                 romanArray.unshift("X");
+//                 break;
+//             case 2:
+//                 romanArray.unshift("XX");
+//                 break;
+//             case 3:
+//                 romanArray.unshift("XXX");
+//                 break;
+//             case 4:
+//                 romanArray.unshift("XL");
+//                 break;
+//             case 5:
+//                 romanArray.unshift("L");
+//                 break;
+//             case 6:
+//                 romanArray.unshift("LX");
+//                 break;
+//             case 7:
+//                 romanArray.unshift("LXX");
+//                 break;
+//             case 8:
+//                 romanArray.unshift("LXXX");
+//                 break;
+//             case 9:
+//                 romanArray.unshift("XC");
+//                 break;
+//         }
+//
+//     }
+//     if (array.length>=3){
+//         switch(Number(array[array.length-3])){
+//             case 1:
+//                 romanArray.unshift("C");
+//                 break;
+//             case 2:
+//                 romanArray.unshift("CC");
+//                 break;
+//             case 3:
+//                 romanArray.unshift("CCC");
+//                 break;
+//             case 4:
+//                 romanArray.unshift("CD");
+//                 break;
+//             case 5:
+//                 romanArray.unshift("D");
+//                 break;
+//             case 6:
+//                 romanArray.unshift("DC");
+//                 break;
+//             case 7:
+//                 romanArray.unshift("DCC");
+//                 break;
+//             case 8:
+//                 romanArray.unshift("DCCC");
+//                 break;
+//             case 9:
+//                 romanArray.unshift("CM");
+//                 break;
+//         }
+//
+//     }
+//     if (array.length>=4){
+//         switch(Number(array[array.length-4])){
+//             case 1:
+//                 romanArray.unshift("M");
+//                 break;
+//             case 2:
+//                 romanArray.unshift("MM");
+//                 break;
+//             case 3:
+//                 romanArray.unshift("MMM");
+//                 break;
+//             case 4:
+//                 romanArray.unshift("MMMM");
+//                 break;
+//             case 5:
+//                 romanArray.unshift("MMMMMM");
+//                 break;
+//
+//         }
+//
+//     }
+//     return romanArray.join("");
+//
+// }
+//
+// console.log(convertToRoman(36));\
 
+//One of the simplest and most widely known ciphers is a Caesar cipher, also known as a shift cipher. In a shift cipher the meanings of the letters are shifted by some set amount.
+//
+// A common modern use is the ROT13 cipher, where the values of the letters are shifted by 13 places. Thus 'A' ↔ 'N', 'B' ↔ 'O' and so on.
+//
+// Write a function which takes a ROT13 encoded string as input and returns a decoded string.
+//
+// All letters will be uppercase. Do not transform any non-alphabetic character (i.e. spaces, punctuation), but do pass them on.
 
-console.log(palindrome("eye"));
-console.log(palindrome("not a palindrome"))
-console.log(palindrome("_eye"));
+// function rot13(str) {
+//     var array=str.split("");
+//     var newArray=array.map(function(x){
+//         var testRegex= /[A-Z]/
+//         if (testRegex.test(x)) {
+//             var num = x.charCodeAt(0);
+//             num = num + 13;
+//             if (num > 90) {
+//                 num = 64 + (num - 90);
+//             }
+//             return String.fromCharCode(num);
+//         }
+//         else{
+//             return x;
+//         }
+//     })
+//     return newArray.join("");
+// }
+//
+// console.log(rot13("SERR PBQR PNZC"));
 
+//Return true if the passed string looks like a valid US phone number.
+//
+// The user may fill out the form field any way they choose as long as it has the format of a valid US number. The following are examples of valid formats for US numbers (refer to the tests below for other variants):
+//
+// 555-555-5555
+// (555)555-5555
+// (555) 555-5555
+// 555 555 5555
+// 5555555555
+// 1 555 555 5555
+// For this challenge you will be presented with a string such as 800-692-7753 or 8oo-six427676;laskdjf. Your job is to validate or reject the US phone number based on any combination of the formats provided above. The area code is required. If the country code is provided, you must confirm that the country code is 1. Return true if the string is a valid US phone number; otherwise return false.
 
+// function telephoneCheck(str) {
+//     var arr=str.split("");
+//     var testRegex=/[0-9()-]/
+//     var testRegex2=/\s/
+//     for (var i=0; i<arr.length; i++){
+//         if (testRegex.test(arr[i]) || testRegex2.test(arr[i])){
+//
+//         } else{
+//             return false;
+//         }
+//     }
+//     var numbersTestRegex=/\d/;
+//     var numbersArray=arr.filter(function(x){
+//             return numbersTestRegex.test(x)
+//     })
+//     console.log(numbersArray)
+//     if (numbersArray.length!==10 && numbersArray.length!==11 ){
+//             return false;
+//         }
+//     if (numbersArray.length===11 &&numbersArray[0]!=="1"){
+//         return false;
+//     }
+//     var noSpacesArray=arr.filter(function(x){
+//         return x!==" ";
+//     })
+//     for (var i =0; i<noSpacesArray.length; i++){
+//         if (testRegex.test(arr[i]) || testRegex2.test(arr[i])){
+//             if (arr[i]==="("){
+//                 if (arr[i+4]===")"&& i<3){
+//
+//                 } else{
+//                     return false;
+//                 }
+//             } else if(arr[i]===")") {
+//                 if (arr[i - 4] === "(" && i < 7) {
+//
+//                 } else {
+//                     return false;
+//                 }
+//             }
+//         } else{
+//             return false;
+//         }
+//     }
+//     var testRegex3= /[()-]/
+//     var spaceFreeString=noSpacesArray.join("")
+//     var numberPatternCheck=spaceFreeString.split(testRegex3);
+//     numberPatternCheck=numberPatternCheck.filter(function(x){
+//         return x!=="";
+//     })
+//     console.log(numberPatternCheck)
+//     console.log(numberPatternCheck.join(""), numberPatternCheck.join("").length, numberPatternCheck.join("")[0])
+//     if (numberPatternCheck.join("").length===10){
+//         return true;
+//     }
+//     if(numberPatternCheck.join("").length===11 && numberPatternCheck.join("")[0]==="1"){
+//         return true;
+//     }
+//     for (var i =0; i<numberPatternCheck.length;i++){
+//         var numberLength=numberPatternCheck[i].length;
+//         console.log(numberPatternCheck[i], numberLength)
+//         if (numberLength===3){
+//             continue;
+//         } else if (numberLength!==3){
+//             if (i===0 && numberPatternCheck[i]==="1"){
+//                 continue;
+//             } else if(numberLength===4 && i===(numberPatternCheck.length-1)){
+//                 continue;
+//             } else if(numberLength===4 && i===0&& numberPatternCheck[i][0]==="1"){
+//
+//             }else{
+//                 return false;
+//             }
+//         }
+//     }
+//     return true;
+// }
+//
+// console.log(telephoneCheck("1 555 555 5555"));
 
+//Design a cash register drawer function checkCashRegister() that accepts purchase price as the first argument (price), payment as the second argument (cash), and cash-in-drawer (cid) as the third argument.
+//
+// cid is a 2D array listing available currency.
+//
+// The checkCashRegister() function should always return an object with a status key and a change key.
+//
+// Return {status: "INSUFFICIENT_FUNDS", change: []} if cash-in-drawer is less than the change due, or if you cannot return the exact change.
+//
+// Return {status: "CLOSED", change: [...]} with cash-in-drawer as the value for the key change if it is equal to the change due.
+//
+// Otherwise, return {status: "OPEN", change: [...]}, with the change due in coins and bills, sorted in highest to lowest order, as the value of the change key.
 
+// function checkCashRegister(price, cash, cid) {
+//     var change;
+//     return change;
+// }
 
-
-
+//checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
 
