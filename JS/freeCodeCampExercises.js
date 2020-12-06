@@ -1000,3 +1000,63 @@
 
 //checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
 
+function checkCashRegister(price, cash, cid) {
+    console.log('1',cid)
+    var changeValueObj={
+        "PENNY": .01,
+        "NICKEL": .05,
+        "DIME": .1,
+        "QUARTER": .25,
+        "ONE": 1,
+        "FIVE": 5,
+        "TEN": 10,
+        "TWENTY": 20,
+        "ONE HUNDRED": 100
+    }
+    var changeDue=cash-price;
+    //console.log(changeDue);
+    //var currentChange=cid.reverse();
+    var array=[]
+    c
+    var currentChange= cid.slice();
+    currentChange.reverse();
+    //console.log(currentChange)
+    var changeGivenArray=[];
+
+    for (var i=0; i<currentChange.length; i++){
+        var changeGiven=0;
+        //console.log("change due is"+changeDue, "Current change in this specific drawer"+currentChange[i][0]+currentChange[i][1])
+        while (currentChange[i][1]>0 && changeDue>=changeValueObj[currentChange[i][0]]){
+            changeDue=(changeDue-changeValueObj[currentChange[i][0]]).toFixed(2)
+            currentChange[i][1]=parseFloat((currentChange[i][1]-changeValueObj[currentChange[i][0]]).toFixed(2));
+            changeGiven=Number((changeGiven+Number(changeValueObj[currentChange[i][0]])).toFixed(2));
+            //console.log(currentChange[i][1])
+            console.log(changeGiven, cid);
+        }
+        //console.log(changeGiven)
+        if (changeGiven>0) {
+            changeGivenArray.unshift([currentChange[i][0], changeGiven])
+        }
+
+    }
+    console.log('2', cid);
+    var changeNotZeroCounter=0;
+    for (var i=0; i<currentChange.length; i++){
+        if (currentChange[i][1]>0){
+            changeNotZeroCounter++
+        }
+    }
+    if (changeDue>0){
+       return {status: "INSUFFICIENT_FUNDS", change: []}
+    } else if (changeNotZeroCounter===0){
+        //cid[0][1]=0.5
+        return {status: "CLOSED", change: cid}
+    } else{
+
+        return {status: "OPEN", change: changeGivenArray.reverse()}
+    }
+}
+
+console.log(checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]));
+
+

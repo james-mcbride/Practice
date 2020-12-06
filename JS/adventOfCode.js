@@ -354,4 +354,68 @@ var array2=["5-10 b: bhbjlkbbbbbbb","3-4 j: hjvj","8-9 p: pmljtsttp","3-4 t: hvt
 //     }
 // }
 // console.log(69*8+5)
+// const fs = require('fs');
+// const report = fs.readFileSync('../../day6 adventOfCodeInput.txt', 'utf8');
+// const answers = report.split('\n\n');
+// const sortedAnswers=answers.map(function(x){
+//     return x.split("\n");
+// })
+// const totalAnswers= sortedAnswers.reduce(function(sum,x,i){
+//     var groupArray=[];
+//     for (var i=0; i<x.length; i++) {
+//         for (var j = 0; j < x[i].length; j++) {
+//
+//             if (groupArray.indexOf(x[i][j]) === -1) {
+//                 console.log(x[i][j],groupArray.indexOf(x[i][j]))
+//                 groupArray.push(x[i][j]);
+//             }
+//         }
+//     }
+//
+//     console.log(groupArray)
+//     return sum+groupArray.length;
+//
+// },0)
+// console.log(totalAnswers)
 
+//first guess 13935
+//second guess 2827
+
+const fs = require('fs');
+const report = fs.readFileSync('../../day6 adventOfCodeInput.txt', 'utf8');
+const answers = report.split('\n\n');
+const sortedAnswers=answers.map(function(x){
+    return x.split("\n");
+})
+const totalAnswers= sortedAnswers.reduce(function(sum,x,i){
+    var alphabet='abcdefghijlklmnopqrstuvwxyz';
+    var alphabetObj={};
+    for (var i =0; i<alphabet.length; i++){
+        alphabetObj[alphabet[i]]=0;
+    }
+
+    var groupArray=[];
+    for (var i=0; i<x.length; i++) {
+        for (var j = 0; j < x[i].length; j++) {
+            ++alphabetObj[x[i][j]];
+            }
+        }
+    var letterCount=Object.values(alphabetObj);
+    var approvedLetters=[];
+    for (var k=0; k<letterCount.length; k++){
+        if (letterCount[k]===x.length){
+            approvedLetters.push(letterCount[k])
+        }
+    }
+    console.log(x)
+    console.log("size of group is"+x.length);
+    console.log(alphabetObj);
+    console.log("number of letters everyone voted yes for"+approvedLetters.length)
+    return sum+approvedLetters.length;
+
+},0)
+console.log(totalAnswers)
+console.log(sortedAnswers)
+//first guess 3177 too low
+//second guess 3178 too low, checked to see
+//next will try 3177 + 16 = 3193. Very last array item wasn't working due to extra parenthesis for end of page.
