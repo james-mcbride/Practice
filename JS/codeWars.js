@@ -195,31 +195,69 @@
 //You are going to be given an array of integers. Your job is to take that array and find an
 // index N where the sum of the integers to the left of N is equal to the sum of the integers to the
 // right of N. If there is no index that would make this happen, return -1.
-    function findEvenIndex(arr) {
-        var firstSum = 0;
-        var secondSum = 0;
-        for (var i = 0; i < arr.length; i++) {
-            var k = arr.length - 1;
-            for (var j = 0; j < arr.length; j++) {
-                if (j < i) {
-                    firstSum += arr[j];
-                }
-                if (k > i) {
-                    secondSum += arr[k]
-                }
-                k--;
-                console.log("var i=" + i, "var j= " + j, "var k = +" + k, firstSum, secondSum)
-            }
-            if (firstSum === secondSum) {
-                return i;
-            }
-            firstSum=0;
-            secondSum=0;
-        }
-        return -1;
+//     function findEvenIndex(arr) {
+//         var firstSum = 0;
+//         var secondSum = 0;
+//         for (var i = 0; i < arr.length; i++) {
+//             var k = arr.length - 1;
+//             for (var j = 0; j < arr.length; j++) {
+//                 if (j < i) {
+//                     firstSum += arr[j];
+//                 }
+//                 if (k > i) {
+//                     secondSum += arr[k]
+//                 }
+//                 k--;
+//                 console.log("var i=" + i, "var j= " + j, "var k = +" + k, firstSum, secondSum)
+//             }
+//             if (firstSum === secondSum) {
+//                 return i;
+//             }
+//             firstSum=0;
+//             secondSum=0;
+//         }
+//         return -1;
+//     }
+//     console.log(findEvenIndex([1,2,3,4,3,2,1]));
+//     console.log(findEvenIndex([1,100,50,-51,1,1]));
+
+//A child is playing with a ball on the nth floor of a tall building. The height of this floor, h, is known.
+//
+// He drops the ball out of the window. The ball bounces (for example), to two-thirds of its height (a bounce of 0.66).
+//
+// His mother looks out of a window 1.5 meters from the ground.
+//
+// How many times will the mother see the ball pass in front of her window (including when it's falling and bouncing?
+//
+// Three conditions must be met for a valid experiment:
+// Float parameter "h" in meters must be greater than 0
+// Float parameter "bounce" must be greater than 0 and less than 1
+// Float parameter "window" must be less than h.
+// If all three conditions above are fulfilled, return a positive integer, otherwise return -1.
+
+
+function bouncingBall(h,  bounce,  window) {
+    //checking float parameters
+    if (h<=0 || bounce <0 || bounce>=1 || window>=h){
+        return -1
     }
-    console.log(findEvenIndex([1,2,3,4,3,2,1]));
-    console.log(findEvenIndex([1,100,50,-51,1,1]));
+    //building array to store each bounce's height value
+    var bounceHeight=[];
+    //building counter variable to log each time ball passes window. Will be at least once since h must be greater than window.
+    var bounces =1;
+    while(h>bounce){
+        h*=bounce;
+        bounceHeight.push(h);
+        console.log(bounceHeight);
+        if (h>window){
+            bounces+=2;
+        }
+    }
+    return (bounces)
+    // your code here
+}
+
+console.log(bouncingBall(30, 0.66, 1.5));
 
 
 
