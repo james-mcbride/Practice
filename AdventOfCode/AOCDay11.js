@@ -1,236 +1,172 @@
-//--- Day 12: Rain Risk ---
-// Your ferry made decent progress toward the island, but the storm came in faster than anyone expected. The ferry needs to take evasive actions!
+//--- Day 11: Seating System ---
+// Your plane lands with plenty of time to spare. The final leg of your journey is a ferry that goes directly to the tropical island where you can finally start your vacation. As you reach the waiting area to board the ferry, you realize you're so early, nobody else has even arrived yet!
 //
-// Unfortunately, the ship's navigation computer seems to be malfunctioning; rather than giving a route directly to safety, it produced extremely circuitous instructions. When the captain uses the PA system to ask if anyone can help, you quickly volunteer.
+// By modeling the process people use to choose (or abandon) their seat in the waiting area, you're pretty sure you can predict the best place to sit. You make a quick map of the seat layout (your puzzle input).
 //
-// The navigation instructions (your puzzle input) consists of a sequence of single-character actions paired with integer input values. After staring at them for a few minutes, you work out what they probably mean:
+// The seat layout fits neatly on a grid. Each position is either floor (.), an empty seat (L), or an occupied seat (#). For example, the initial seat layout might look like this:
 //
-// Action N means to move north by the given value.
-// Action S means to move south by the given value.
-// Action E means to move east by the given value.
-// Action W means to move west by the given value.
-// Action L means to turn left the given number of degrees.
-// Action R means to turn right the given number of degrees.
-// Action F means to move forward by the given value in the direction the ship is currently facing.
-// The ship starts by facing east. Only the L and R actions change the direction the ship is facing. (That is, if the ship is facing east and the next instruction is N10, the ship would move north 10 units, but would still move east if the following action were F.)
+// L.LL.LL.LL
+// LLLLLLL.LL
+// L.L.L..L..
+// LLLL.LL.LL
+// L.LL.LL.LL
+// L.LLLLL.LL
+// ..L.L.....
+// LLLLLLLLLL
+// L.LLLLLL.L
+// L.LLLLL.LL
+// Now, you just need to model the people who will be arriving shortly. Fortunately, people are entirely predictable and always follow a simple set of rules. All decisions are based on the number of occupied seats adjacent to a given seat (one of the eight positions immediately up, down, left, right, or diagonal from the seat). The following rules are applied to every seat simultaneously:
 //
-// For example:
+// If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied.
+// If a seat is occupied (#) and four or more seats adjacent to it are also occupied, the seat becomes empty.
+// Otherwise, the seat's state does not change.
+// Floor (.) never changes; seats don't move, and nobody sits on the floor.
 //
-// F10
-// N3
-// F7
-// R90
-// F11
-// These instructions would be handled as follows:
+// After one round of these rules, every seat in the example layout becomes occupied:
 //
-// F10 would move the ship 10 units east (because the ship starts by facing east) to east 10, north 0.
-// N3 would move the ship 3 units north to east 10, north 3.
-// F7 would move the ship another 7 units east (because the ship is still facing east) to east 17, north 3.
-// R90 would cause the ship to turn right by 90 degrees and face south; it remains at east 17, north 3.
-// F11 would move the ship 11 units south to east 17, south 8.
-// At the end of these instructions, the ship's Manhattan distance (sum of the absolute values of its east/west position and its north/south position) from its starting position is 17 + 8 = 25.
+// #.##.##.##
+// #######.##
+// #.#.#..#..
+// ####.##.##
+// #.##.##.##
+// #.#####.##
+// ..#.#.....
+// ##########
+// #.######.#
+// #.#####.##
+// After a second round, the seats with four or more occupied adjacent seats become empty again:
 //
-// Figure out where the navigation instructions lead. What is the Manhattan distance between that location and the ship's starting position?
+// #.LL.L#.##
+// #LLLLLL.L#
+// L.L.L..L..
+// #LLL.LL.L#
+// #.LL.LL.LL
+// #.LLLL#.##
+// ..L.L.....
+// #LLLLLLLL#
+// #.LLLLLL.L
+// #.#LLLL.##
+// This process continues for three more rounds:
+//
+// #.##.L#.##
+// #L###LL.L#
+// L.#.#..#..
+// #L##.##.L#
+// #.##.LL.LL
+// #.###L#.##
+// ..#.#.....
+// #L######L#
+// #.LL###L.L
+// #.#L###.##
+// #.#L.L#.##
+// #LLL#LL.L#
+// L.L.L..#..
+// #LLL.##.L#
+// #.LL.LL.LL
+// #.LL#L#.##
+// ..L.L.....
+// #L#LLLL#L#
+// #.LLLLLL.L
+// #.#L#L#.##
+// #.#L.L#.##
+// #LLL#LL.L#
+// L.#.L..#..
+// #L##.##.L#
+// #.#L.LL.LL
+// #.#L#L#.##
+// ..L.L.....
+// #L#L##L#L#
+// #.LLLLLL.L
+// #.#L#L#.##
+// At this point, something interesting happens: the chaos stabilizes and further applications of these rules cause no seats to change state! Once people stop moving around, you count 37 occupied seats.
+//
+// Simulate your seating area by applying the seating rules repeatedly until no seats change state. How many seats end up occupied?
 
-//var directionsArray=["F10","N3","F7","R90","F11"];
-// var directionsArray=["N3","L90","F63","W5","F46","E3","F22","N2","R90","F68","E4","W3","R90","S3","W4","R180","E1","S5","F90","N4","E3","N1","R90","F74","R90","E2","R90","W1","S3","W4","F5","S1","E5","S1","E4","R90","E5","L90","E4","R90","E2","F57","N1","L90","F59","R90","N1","W3","S2","L90","N3","E1","F56","L180","S3","R90","F88","E3","F59","W1","N2","F52","W4","F69","W2","F10","W1","R180","W1","R90","F14","L90","W1","S5","L90","S3","R90","E3","F35","R90","E3","S3","F45","E2","R90","F86","E1","E4","F35","L180","S1","L90","N2","F71","L180","W3","S4","R90","N5","F93","W4","F74","L180","E2","R180","F11","S5","F28","S3","F93","W2","N4","F26","R90","S4","L90","N1","L90","E2","L90","F3","E4","F43","R90","W4","R90","E3","S1","R180","L90","F62","L90","E5","R90","W3","L180","F40","F20","N2","L270","E1","F14","W3","S5","R90","F3","S2","L90","W5","L270","W1","R90","F11","R90","E3","N1","E3","F19","S5","L180","N4","E2","R180","E5","S2","W4","S3","W1","F4","L90","S2","W4","S5","F21","L180","W4","S3","L90","S4","L90","E1","F28","L180","S3","E2","N3","L180","W3","L90","F99","S2","F63","E2","N3","R90","E3","L90","E5","L90","N4","F39","R180","S3","R90","N3","F7","E3","S2","E2","F98","S1","F87","E1","S3","F49","N1","W2","F4","L270","F91","L90","E1","S4","R180","F43","S3","E3","R90","F46","W2","R90","W5","F13","R180","F52","N4","F28","N3","R90","E5","S3","F82","R90","W3","L90","F33","S5","R90","R90","S5","F24","R90","N4","F89","W1","S4","F80","W3","L270","F11","L90","W2","N3","F18","R90","W2","R90","E1","R270","N3","R180","S4","F36","S3","L90","N2","L90","N2","E1","F48","E5","L180","S3","F81","E4","L90","W3","F31","E5","R90","F66","S4","W3","L90","E3","N4","F85","L90","F58","E5","L90","S1","W3","F79","S4","F60","N2","F42","S3","W3","R90","E1","N1","L90","F15","E4","F98","L90","R90","S4","E1","F19","E2","S4","R90","W2","L180","N3","E2","S3","F34","S4","S4","L180","S1","R90","S4","S1","L90","E3","F28","R90","W1","N2","E5","F48","E4","S1","W2","F95","W2","N2","L90","E2","L90","W3","S2","L270","W4","L90","N4","R90","E4","R270","W4","F6","W2","N1","E1","F19","W2","N1","F54","W2","L90","S1","L90","F80","E1","S5","E5","F80","R90","L270","E4","F93","N4","E5","S1","E1","R90","F63","N3","R90","E1","N2","L90","W5","R90","R270","N1","E4","L180","E4","F19","L90","F27","W2","S2","W5","S1","F54","S4","R90","F85","W2","F13","R90","F73","S5","E2","S2","F12","W5","F23","N1","E1","F38","N2","W2","N3","E2","L270","F7","L90","S3","L90","S3","F86","E5","R90","E1","F52","L180","S4","L180","W4","F41","R90","E3","F70","R270","N3","F32","S2","E5","R180","F20","W3","F54","E2","F34","F61","S5","W1","L90","S5","N5","W2","R180","W2","L90","E5","S4","L90","S4","L180","F84","S1","W1","L90","F92","F46","N1","F22","F24","L90","N5","W4","R270","F79","N1","W1","F68","R90","W5","R180","N5","L90","L180","S1","W4","N1","L180","S1","N4","E4","R90","E1","E4","F58","S4","E5","F49","N1","E2","S4","L90","W2","F67","E2","N5","W1","L90","E5","F82","N5","F91","W5","R90","F17","W5","S2","R90","N2","R90","N5","E4","L90","N1","F26","N3","E3","F19","L270","R90","E3","F21","L180","S4","F50","S4","W2","F56","F49","N2","E3","R180","E4","F5","F17","E2","R90","N3","F96","L180","E4","F64","W5","R90","W5","S5","F92","E5","F10","N1","W1","F94","R90","W4","F22","S1","W4","F38","W1","F17","E3","L90","F3","S1","L90","F27","W4","F31","S5","W4","N2","E5","F44","W2","E4","F54","L180","E5","L90","N1","E5","N4","L180","L270","W3","F80","S2","F49","E4","F46","E2","E5","L270","F12","F63","L90","N2","E5","N3","F85","R270","S3","F71","N4","E5","F36","N5","F23","L90","N2","E3","F93","S5","F1","S2","F29","L90","F17","R180","S4","R90","E2","S3","W5","R90","S3","R90","W4","F62","L180","S4","L90","N2","F46","N3","R180","E1","R90","F73","S5","F12","L180","F47","L90","F79","N4","R270","W3","N1","W1","N3","F63","S2","F50","R90","F30","N3","F7","N4","L90","S4","N1","E5","S5","F9","L90","L90","F7","N1","R90","F52","E3","L90","N3","F50","L90","F83","E3","F74","L90","N1","L90","F4","N1","F28","E4","F9","E4","S2","W4","L270","S1","W4","F23","E1","F52","E1","L180","E2","N5","L90","W5","L90","S1","E3","R90","E4","L90","S1","W2","N4","W1","S4","E2","L90","E5","S2","L180","F91","N5","W4","N5","F14","S5","R90","S5","L90","F78","N2","W3","R90","F17","N5","W1","F53","W2","F33","R90","E2","F15","L90","E5","F77","L90","S1","F33"]
-//
-// var directionsSubArray=directionsArray.map(function(x){
-//     return [x[0], Number(x.slice(1,))]
-// })
-// var northSouthMovment=0;
-// var eastWestMovement=0;
-// var currentDirection ="E"
-//
-// var compassArray=["N", "E", "S", "W"]
-//
-// function rotateRight(degrees){
-//     degrees/=90;
-//     var compassArrayIndex=compassArray.indexOf(currentDirection);
-//     compassArrayIndex+=degrees;
-//     if (compassArrayIndex>3){
-//         compassArrayIndex-=4;
-//     }
-//     currentDirection=compassArray[compassArrayIndex];
-// }
-//
-// function rotateLeft(degrees){
-//     degrees/=90;
-//     var compassArrayIndex=compassArray.indexOf(currentDirection);
-//     compassArrayIndex-=degrees;
-//     if (compassArrayIndex<0){
-//         compassArrayIndex+=4;
-//     }
-//     currentDirection=compassArray[compassArrayIndex];
-// }
-//
-// function movement(x){
-//     if (x[0]==="N"){
-//        return northSouthMovment+=x[1]
-//     } else if (x[0]==="S"){
-//        return northSouthMovment-=x[1]
-//     } else if (x[0]==="E"){
-//         return eastWestMovement+=x[1]
-//     } else if (x[0]==="W"){
-//         return eastWestMovement-=x[1]
-//     } else if(x[0]==="F"){
-//         return movement([currentDirection,x[1]])
-//     } else if(x[0]==="R"){
-//         return rotateRight(x[1]);
-//     } else if(x[0]==="L"){
-//     return rotateLeft(x[1]);
-// }
-//
-// }
-// for (var i=0; i<directionsSubArray.length; i++){
-//     movement(directionsSubArray[i])
-// }
-// console.log(Math.abs(northSouthMovment)+Math.abs(eastWestMovement))
-//first guess 1678 too high
+//var seatArray=["L.LL.LL.LL","LLLLLLL.LL","L.L.L..L..","LLLL.LL.LL","L.LL.LL.LL","L.LLLLL.LL","..L.L.....","LLLLLLLLLL","L.LLLLLL.L","L.LLLLL.LL"]
+var seatArray=["LLLLL.LLLLLLLLL.LLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLL.LL.L.LLLL.LLL..LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLLLLLLLLLLLLLLLLLL.L..LLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLL.L.LLLLLLLLLL","LLLLLLLLLL.LLLL.LLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLL","LLLLLLLLLLLLLLL.LLLL.LLLLL.LLLLLLL.LL.LLLLLL..LLLLLLLLLLLLL.LL.LLLLLLL.LLLLLLLLLLLLLL.LLLLLLLLLLLL","LLLLLLLLLL.LLLL.LLLL.LLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLL.LLLLLL.LLLLLLLLLLLLLLLLLLLLL","LLLLLL.LLL.LLLL.LLLL.LLLLLLLLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLL.LL.LLLL.LLLLLLL.LLLLLLLLL.LLLLLLLLLLLL",".LL..LL.L..L.L...LL..L..L.L...LL..L...LL..LLLL.L.L.L.....L....L.LL...L.LL.LL....L...L..L....L....L","LLLLL.LLLL.LLLLLLLLL.LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLL.LLLLLLL.LLLL.LLLLLLLLLLLLLLL","LLLLLLLLLL.LLLL.LLLL.LLL.L.LLLLLLLLLLLLLLLLLLLLLLLLL.L.LLLLLLLLLL.LLLLLLLLLLL.LLLLLLL.LLLLLLL.LLLL","LLLLL.LLLL.LLLL.LLLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLL...LLLLLLLLLL.LLLLLLL","LLLLLL.LLLLLLLL.LLLL.LLLLLLLL.LLLL.LLLLLLLLL..LLLL.L.LLLLLLLLL.LLLLLLL.LLLLLL.LLLLLLLLLLLLL.LLL.LL","L.L...L.....LLL.L..LL...L......L.LLL........LL..LLL..L.LLL....L..L.L.L..L..L.LL..L.......LL..L.L..","LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL","LLLLLLLLL.LLLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LL.LLLL.LLLLLLLLLL.LLLLLLLLL","LLLLLLLLLL.LLLL.LLLL.LLLL.LLLLLLL.LLLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLL.L.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLLLLLLL.LLLL.LLLLL.LLLLL.LLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLL.LLLLLLL..LLLLLL.LLLL.LLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLLLLLL.LLLLLLLLLLLLL.LLLLLLL.LLLL.LLLL.LLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL","..L..L.L........LL.L.L..LLL........L....LL..LLL.LL....L.......LL.LLLL....L...L.LL........L.L......","LLLLL.L.LL.LLLLLLLLL.LLLLL.LLLLLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLL.L.LLLLLLLL.L","LLLLL.LLLL.LLLL..LLL.LLLLLLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLL",".LLLLLLLLL.LLLL.LLLL..LLLLLLLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLL.L.L..LLLL.LLLLLLLLLLLLLLLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLLLL.LLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLLLLLLL.LLLLL",".....LL.L.LL...L..LL.LL..L...L..L.LL..LL..L.L..........L....L...L.L....L.L.L....LL.........LL..LL.","LLLLL.LLLL.LLLL.LLLLLLLLLLLLLLLLLL.LLL.LLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.L.L.LLL.LLLLLLLLLLLL","LLLLLLLLLL.LLLL.LLLL.LLLLL.LLLLLLLLLLLLLLL.LLLL.LLLL.LLLLLLL.LLLLLLLL.LLL.LLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLLLL.LL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LL.LLLLL..LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLL.LL","LLLLLLLL.LLLLLL.LLLL.LLLLL.LLLLLLL.LLLLLL.LL.LLLLLLLLLLLLLLL.L..LLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLL.LLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLL.LLLLLLLLLLL.LLLLLLLLLLLL","L..LL.L.......L.LL..L.....L..L.L..L.L...L....LLL..........LLL.LL......L.L..L.LL..L....LL..L.......","LLLLL.LLLL.LLLL.LLLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLL.LL.L.LLL..LLLL.LLLLL.LLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLLLL.","LLLLL.LLLL.LLLL.LLLL.LLLLL.LLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLL.L.LLLLLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLLL.LLL.LL.LLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLL.LLLL.L.LL.LLLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLL.LLL..LLLLL.LLLLLL..LLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.L.LLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLLLLLLL.LLLL.LLLLLLLLLL.LLLL.L..LLLLLLLLL.LLLLLLL.LLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLLLLLLLLLL.LL.LLLLLL.L.LLLLL.LLLLLLLLLLLLLLL..LLLLLLL.LLLLLLLLLLLLLLLLLLLL","...LLLLL..L...L..L..L.............L..L...L..L.L.L..LLL.L.....L.L.L.L.L..L.LL.L..L.L..LLL..LL...LLL","LLLLL.LLLL.LLLL.LLLL.LLLLL.LLL.LLL.LLLLLLLLL.LL.LLLL.LLLL.LLLLLLLLLLL.LLLLLL..LLLLLLL.LLLLLLLLLLLL","LLLLLLLLLL.L.LL.LLLLLL.LLL.LLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLL..L.LLLL.LLLL.LL.LLLLLLL.LLLLLLLLLLLL",".LLLLLLLLL.LLLL.LLLL.LLLLL.LL.LLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LL.LLLLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLLLLL.LLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLLLLL","LLLL..LLLLLLLLL.LLLL.LL.LL..LLLLLL.LLLLLLL.L.LLLLLLL.LLL.LLLLL.LLLLLLLLL.LLLLLLLLLLLL.LLLL.LLLLLLL","LLLLLL.LLL.LLLL.LLLL.LLLLL.LLL...LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLL.LL.LLL.LLLLL","LLLLLLLLLLLLLLLLL.LL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLLLLLLL..LLL.LLLL.LLLLL.LLLLLLL.LL.LLLLLLL.LLLLLL.LLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL",".LL..L....L..LL....L.......L........LL......L...L..............L.L...L.L....LLLL.....L......LLL..L","LLLLL.LLLL.LLLL.LLLL.LLLLLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLL.LLL..LLLLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLL.LLLLLLLLL.LLLLLLLLLL.LL.LLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LLL.LLLLLLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLLLLLLLLLLLLL.LLLLLLL.LL.LLLLLL.LLLLLL.LLLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLL.LLLLLLL.LLLL","LLLLL.LLLL.LLLL.LLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLLLLLLL.LLLL.LLLLL.LLLLLL..LLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLLLLLLLL.LLLLLL","...L.L.L.LLL..L......LLL.L..L......L...LLL....L....L..LL.L.L..L..L......L.....LL.L.....L........L.","LL.LLLLL.L.LLLL.LLLL.LLLLL.LLL.LLL.LLLLLLLLL.LLLLLLL.LLLLLLLL..LLLLLL.LLLLLLL.LLLLLLL.L.LLLLLLLLLL","LLLLL.LLLL.LLLLLLLLLLLLLLL.LLLLLLL.L.LLLLLL..LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLL.LLL..LLLLLLLLL.L.LLL.LLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLLLLL","LLLLL.LLL..LLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLLL.LL..LLLLLLL.L.LLL.LL.LLLLL.LLLLLLLLLLLLLLLLLLLLLL","LLLLL.LLLL.LLLLLLLLL.LLLLL.LLLLLLL.LLLLLLLLL.LLLLLLL.LLLLL.LLLLLLLLLL.LLLLLLL.LLLLLLL.L.LLLLLLLLLL","LLLLLLLLLLLLLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLL.LLLLLLLL.LL.","LLLLL.LLLL.LLLL.LLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLLLL.LLLLLLL.LL","LLLLLL.LLLLLLLLLLLLL.LLLLLLLLLLLL..LLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLLLLL","...L...L...L...LL...LL.L.L..LL..L....LL...LLLL.L........L......L..L....L.L....L...L.L.L.LLL.L..L.L","LLLLL.L.LL.LLLL.LLLL.LLLLLLLLLLLLLLLL.LLLLLL.LLLL.LL.LL.LLLLLL.LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLL.LLLLLLLLLLLLLLLLLLLLLLLLL.LL.LLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLLLLLLL.LLLLL.LLLL.LL.LLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLLLLLLL.LLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLLLLLLL.LLLLLLL","LLLLL.LLLL.LLLL.LLLLLLLLLLLLLL.LLL.LLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLL.LLLLL.LLLLLLLLLLLLLLLL.LLLLLLLL.LLL","LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLL.LLLLLLL.L.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL","LLLLL.LLLLLLLLL.LL.L.LLLLLLLLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLL..LLLLLLLLLLLL","LL.L...LL..LL..L..L.L....L...L..L..LL......LL.L.......L..LL........LL.LLLLL.......L.....LL.LL.....","LLLLL.LLLLLLL.L.LLLL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLL..LLLLLL.LLLLLLLLLLLL.LL.LLLLLLLLLLLL","LLLLL.LLLLLLL.L.LLLL.LLLLL.LLLLLLL.LLLLLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLLLLLLLL.LLLL.L.LLLLL.LLLLLLLLL.LLLLLLL.LLL.LLLLL.LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLLLLL","LLL.L.LLLLLLLLL.LLLLLLLLLLLLLLLLLL.LLLLLL.LL.LLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLL.LLLLLLLL.LLL","..L.L....LL.LL.....L.LL......L.LL..LLLLLL......LL.L.LL.LLL...LLLL......L.L.L...LL..L..L..L...LL..L","LLLLL.LLLLLLLLL.LLL..LLLLL.LLLLLLL.LLLLLLLLL.LLLLLLL..LLLLLLLL.LLLLLLLLL.LLLL.LLLLLLL.LLLLLLLL.LLL","LLLL..LLLL.LLLL.LLLL.LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLL.L.LLLL.LLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLL.L.LLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLL.LL","L.LL..LLLL.L.LLLLLLLLLLLLL.LLLLLLL.LLLLLLLL..LLL.LLL.LLLLLL.LL.LLLLLL.LLLLLLLLLLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LL.L.LLLL.LLLLL.LLLLLLLLLLLLLLLLLLLLLLLLL.LLLL.LLLLLLLLLL..LLLLLLL.LLLLLLL.LLLLLLLLLLLL","L....L...L..L.L...L....L......L..LLL..L..LL.LL.L.L....L..L.L.LLL.L.LLLL.........L..LL.LLL......L..","LLLLL.LLLL.LLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LLLLL.LLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLL.L","LLLLL.LLL..LLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLLL.LLLL.LLLLLLLLLLLLLLLLLL.LLLLLLL.LLLLLLL.LLLLLLLLL.LL","LLLLL.LLLLLL.LL.LLLL.LLLLL.LLLLLLL.L.LLLLLLL.LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLLLLLLL.LLLLL.LLLLLLL.LLLLLLLL.LLLLLLLL.LLLLLLLLL.LLLLLL.LL.LLLLLLLLLLLL.LLLLLLLLLLLL","LLLLL.LLLL.LLLL.LLLL.LLLLL.LLLLLLL.LLLLLLLLLLLLLLLLL.LLLLLLLLL.LLLLLL.LLLLLLL.LLLLLLLLLLLLLLLLLLLL","LLLLLLLLLLLL.LLLLLLL.LLLLLL.LLLLLLLLLLLLLLLL.LLLLL.LLLLLLLLLLL.LLLLLLLLLLLLLL.LLLLLLL.LLLLLLLLLLLL"]
 
-
-//--- Part Two ---
-// Before you can give the destination to the captain, you realize that the actual action meanings were printed on the back of the instructions the whole time.
-//
-// Almost all of the actions indicate how to move a waypoint which is relative to the ship's position:
-//
-// Action N means to move the waypoint north by the given value.
-// Action S means to move the waypoint south by the given value.
-// Action E means to move the waypoint east by the given value.
-// Action W means to move the waypoint west by the given value.
-// Action L means to rotate the waypoint around the ship left (counter-clockwise) the given number of degrees.
-// Action R means to rotate the waypoint around the ship right (clockwise) the given number of degrees.
-// Action F means to move forward to the waypoint a number of times equal to the given value.
-// The waypoint starts 10 units east and 1 unit north relative to the ship. The waypoint is relative to the ship; that is, if the ship moves, the waypoint moves with it.
-//
-// For example, using the same instructions as above:
-//
-// F10 moves the ship to the waypoint 10 times (a total of 100 units east and 10 units north), leaving the ship at east 100, north 10. The waypoint stays 10 units east and 1 unit north of the ship.
-// N3 moves the waypoint 3 units north to 10 units east and 4 units north of the ship. The ship remains at east 100, north 10.
-// F7 moves the ship to the waypoint 7 times (a total of 70 units east and 28 units north), leaving the ship at east 170, north 38. The waypoint stays 10 units east and 4 units north of the ship.
-// R90 rotates the waypoint around the ship clockwise 90 degrees, moving it to 4 units east and 10 units south of the ship. The ship remains at east 170, north 38.
-// F11 moves the ship to the waypoint 11 times (a total of 44 units east and 110 units south), leaving the ship at east 214, south 72. The waypoint stays 4 units east and 10 units south of the ship.
-// After these operations, the ship's Manhattan distance from its starting position is 214 + 72 = 286.
-//
-// Figure out where the navigation instructions actually lead. What is the Manhattan distance between that location and the ship's starting position?
-
-//var directionsArray=["F10","N3","F7","R90","F11"];
-var directionsArray=["N3","L90","F63","W5","F46","E3","F22","N2","R90","F68","E4","W3","R90","S3","W4","R180","E1","S5","F90","N4","E3","N1","R90","F74","R90","E2","R90","W1","S3","W4","F5","S1","E5","S1","E4","R90","E5","L90","E4","R90","E2","F57","N1","L90","F59","R90","N1","W3","S2","L90","N3","E1","F56","L180","S3","R90","F88","E3","F59","W1","N2","F52","W4","F69","W2","F10","W1","R180","W1","R90","F14","L90","W1","S5","L90","S3","R90","E3","F35","R90","E3","S3","F45","E2","R90","F86","E1","E4","F35","L180","S1","L90","N2","F71","L180","W3","S4","R90","N5","F93","W4","F74","L180","E2","R180","F11","S5","F28","S3","F93","W2","N4","F26","R90","S4","L90","N1","L90","E2","L90","F3","E4","F43","R90","W4","R90","E3","S1","R180","L90","F62","L90","E5","R90","W3","L180","F40","F20","N2","L270","E1","F14","W3","S5","R90","F3","S2","L90","W5","L270","W1","R90","F11","R90","E3","N1","E3","F19","S5","L180","N4","E2","R180","E5","S2","W4","S3","W1","F4","L90","S2","W4","S5","F21","L180","W4","S3","L90","S4","L90","E1","F28","L180","S3","E2","N3","L180","W3","L90","F99","S2","F63","E2","N3","R90","E3","L90","E5","L90","N4","F39","R180","S3","R90","N3","F7","E3","S2","E2","F98","S1","F87","E1","S3","F49","N1","W2","F4","L270","F91","L90","E1","S4","R180","F43","S3","E3","R90","F46","W2","R90","W5","F13","R180","F52","N4","F28","N3","R90","E5","S3","F82","R90","W3","L90","F33","S5","R90","R90","S5","F24","R90","N4","F89","W1","S4","F80","W3","L270","F11","L90","W2","N3","F18","R90","W2","R90","E1","R270","N3","R180","S4","F36","S3","L90","N2","L90","N2","E1","F48","E5","L180","S3","F81","E4","L90","W3","F31","E5","R90","F66","S4","W3","L90","E3","N4","F85","L90","F58","E5","L90","S1","W3","F79","S4","F60","N2","F42","S3","W3","R90","E1","N1","L90","F15","E4","F98","L90","R90","S4","E1","F19","E2","S4","R90","W2","L180","N3","E2","S3","F34","S4","S4","L180","S1","R90","S4","S1","L90","E3","F28","R90","W1","N2","E5","F48","E4","S1","W2","F95","W2","N2","L90","E2","L90","W3","S2","L270","W4","L90","N4","R90","E4","R270","W4","F6","W2","N1","E1","F19","W2","N1","F54","W2","L90","S1","L90","F80","E1","S5","E5","F80","R90","L270","E4","F93","N4","E5","S1","E1","R90","F63","N3","R90","E1","N2","L90","W5","R90","R270","N1","E4","L180","E4","F19","L90","F27","W2","S2","W5","S1","F54","S4","R90","F85","W2","F13","R90","F73","S5","E2","S2","F12","W5","F23","N1","E1","F38","N2","W2","N3","E2","L270","F7","L90","S3","L90","S3","F86","E5","R90","E1","F52","L180","S4","L180","W4","F41","R90","E3","F70","R270","N3","F32","S2","E5","R180","F20","W3","F54","E2","F34","F61","S5","W1","L90","S5","N5","W2","R180","W2","L90","E5","S4","L90","S4","L180","F84","S1","W1","L90","F92","F46","N1","F22","F24","L90","N5","W4","R270","F79","N1","W1","F68","R90","W5","R180","N5","L90","L180","S1","W4","N1","L180","S1","N4","E4","R90","E1","E4","F58","S4","E5","F49","N1","E2","S4","L90","W2","F67","E2","N5","W1","L90","E5","F82","N5","F91","W5","R90","F17","W5","S2","R90","N2","R90","N5","E4","L90","N1","F26","N3","E3","F19","L270","R90","E3","F21","L180","S4","F50","S4","W2","F56","F49","N2","E3","R180","E4","F5","F17","E2","R90","N3","F96","L180","E4","F64","W5","R90","W5","S5","F92","E5","F10","N1","W1","F94","R90","W4","F22","S1","W4","F38","W1","F17","E3","L90","F3","S1","L90","F27","W4","F31","S5","W4","N2","E5","F44","W2","E4","F54","L180","E5","L90","N1","E5","N4","L180","L270","W3","F80","S2","F49","E4","F46","E2","E5","L270","F12","F63","L90","N2","E5","N3","F85","R270","S3","F71","N4","E5","F36","N5","F23","L90","N2","E3","F93","S5","F1","S2","F29","L90","F17","R180","S4","R90","E2","S3","W5","R90","S3","R90","W4","F62","L180","S4","L90","N2","F46","N3","R180","E1","R90","F73","S5","F12","L180","F47","L90","F79","N4","R270","W3","N1","W1","N3","F63","S2","F50","R90","F30","N3","F7","N4","L90","S4","N1","E5","S5","F9","L90","L90","F7","N1","R90","F52","E3","L90","N3","F50","L90","F83","E3","F74","L90","N1","L90","F4","N1","F28","E4","F9","E4","S2","W4","L270","S1","W4","F23","E1","F52","E1","L180","E2","N5","L90","W5","L90","S1","E3","R90","E4","L90","S1","W2","N4","W1","S4","E2","L90","E5","S2","L180","F91","N5","W4","N5","F14","S5","R90","S5","L90","F78","N2","W3","R90","F17","N5","W1","F53","W2","F33","R90","E2","F15","L90","E5","F77","L90","S1","F33"]
-//var directionsArray=["R270", "R90", "L270"]
-var directionsSubArray=directionsArray.map(function(x){
-    return [x[0], Number(x.slice(1,))]
+seatArray=seatArray.map(function(x){
+    return x.split("")
 })
-var northSouthMovment=0;
-var eastWestMovement=0;
-var currentDirection =[10, 1]
 
-var compassIndex=1
-
-function rotateRight(degrees){
-   //  degrees/=90;
-   // compassIndex+=degrees;
-   // if (compassIndex>4){
-   //     compassIndex-=4;
-   // }
-   var originalDirection=[...currentDirection];
-   if (compassIndex===1){
-       currentDirection[0]=originalDirection[1];
-       currentDirection[1]=-originalDirection[0];
-   } else if (compassIndex===2){
-       currentDirection[0]=originalDirection[1];
-       currentDirection[1]=-originalDirection[0];
-   } else if (compassIndex===3){
-       currentDirection[0]=originalDirection[1];
-       currentDirection[1]=-originalDirection[0];
-   } else if (compassIndex===4){
-       currentDirection[0]=originalDirection[1];
-       currentDirection[1]=-originalDirection[0];
-   }
-}
-
-function rotateLeft(degrees){
-    // degrees/=90;
-    // compassIndex-=degrees;
-    // if (compassIndex<4) {
-    //     compassIndex += 4;
-    // }
-    var originalDirection=[...currentDirection];
-    if (compassIndex===1){
-        currentDirection[0]=-originalDirection[1];
-        currentDirection[1]=originalDirection[0];
-    } else if (compassIndex===2){
-        currentDirection[0]=-originalDirection[1];
-        currentDirection[1]=originalDirection[0];
-    } else if (compassIndex===3){
-        currentDirection[0]=-originalDirection[1];
-        currentDirection[1]=originalDirection[0];
-    } else if (compassIndex===4){
-        currentDirection[0]=-originalDirection[1];
-        currentDirection[1]=originalDirection[0];
-    }
-}
-
-
-
-function movement(x){
-    if (x[0]==="N"){
-        return currentDirection[1]+=x[1];
-    } else if (x[0]==="S"){
-        return currentDirection[1]-=x[1]
-    } else if (x[0]==="E"){
-        return currentDirection[0]+=x[1]
-    } else if (x[0]==="W"){
-        return currentDirection[0]-=x[1]
-    } else if(x[0]==="F"){
-        eastWestMovement+=currentDirection[0]*x[1];
-        northSouthMovment+=currentDirection[1]*x[1]
-    } else if(x[0]==="R"){
-        if (x[1]===90){
-            return rotateRight(x[1]);
-        } else if (x[1]===180){
-            currentDirection[0]*=-1;
-            currentDirection[1]*=-1;
-            return currentDirection
-        } else if(x[1]===270){
-            return rotateLeft([x[1]])
+seatArray=seatArray.map(function(x,i){
+    return x.map(function(y){
+        if (y==="L"){
+            return "#"
         } else{
-            return currentDirection
+            return y
         }
-    } else if(x[0]==="L"){
-        if (x[1]===90){
-            return rotateLeft(x[1]);
-        } else if (x[1]===180){
-            currentDirection[0]*=-1;
-            currentDirection[1]*=-1;
-            return currentDirection
-        } else if(x[1]===270){
-            return rotateRight([x[1]])
-        } else{
-            return currentDirection
+    })
+})
+
+var totalSeatsTaken=seatArray.reduce(function(sum,x){
+    var rowTotal= x.reduce(function(total, y){
+        if (y==="#"){
+             total++
+        }
+        return total;
+    },0)
+    return sum+rowTotal
+},0)
+
+function surroundingSeats(arr,row, column){
+    var surroundingSeatStatus=[];
+    for (var i=0; i<arr.length; i++){
+        for (var j=0; j<arr[i].length; j++){
+            if (row===j && column==i){
+                continue;
+            }else if (Math.abs(row-j)<=1 && Math.abs(column-i)<=1){
+                surroundingSeatStatus.push(arr[i][j])
+            }
+
         }
     }
+    return surroundingSeatStatus
 
 }
+function surroundingSeatsFullCount(arr){
+    return arr.reduce(function(sum, x){
+        if (x==="#"){
+            sum++;
+        }
+        return sum;
+    },0)
+}
 
-function setCompassIndex(){
-    if (currentDirection[0]>=0 && currentDirection[1]>=0){
-        compassIndex=1
-    } else if(currentDirection[0]<=0 && currentDirection[1]<=0){
-        compassIndex=3
-    } else if (currentDirection[0]>=0 && currentDirection[1]<=0){
-        compassIndex=2
-    } else{
-        compassIndex=4
+//var seatCount will hold number of held seats before each re-loop
+var previousSeatCount=1;
+var seatCount=0;
+var iterationCounter=0;
+var nextSeatArray = JSON.parse(JSON.stringify(seatArray));
+while (seatCount!==previousSeatCount){
+    previousSeatCount=seatCount
+    seatCount=0;
+
+    for (var i=0; i<seatArray.length; i++){
+        for (var j=0; j<seatArray[i].length; j++){
+            var currentSeatStatus=surroundingSeats(seatArray, j, i)
+            var currentSeatCount=surroundingSeatsFullCount(currentSeatStatus);
+            if (seatArray[i][j]==="#"){
+                seatCount++
+            }
+            if (iterationCounter%2===0){
+                if (seatArray[i][j]==="#"&&currentSeatCount>=4){
+                    nextSeatArray[i][j]="L"
+                }
+            } else if (iterationCounter%2===1){
+                if (seatArray[i][j]==="L"&&currentSeatCount===0){
+                    nextSeatArray[i][j]="#"
+                }
+            }
+        }
     }
+    seatArray = JSON.parse(JSON.stringify(nextSeatArray));
+    iterationCounter++;
+    console.log("seatcount: "+seatCount)
+    console.log("previous seatcount + "+previousSeatCount)
 }
-for (var i=0; i<directionsSubArray.length; i++){
-    setCompassIndex()
-    movement(directionsSubArray[i])
-}
-console.log(Math.abs(northSouthMovment)+Math.abs(eastWestMovement))
 
 
-//37617 too low
-//88503 too high
-//56889 too high
-//73561 not correct.
+
+
+

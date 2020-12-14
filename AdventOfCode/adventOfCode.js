@@ -464,10 +464,11 @@ for (var i =0; i<colorsArray.length; i++){
         var innerColorsTrackerArray=[...innerColorsArray]
    // console.log(innerColorsTrackerArray)
         while (keepGoing){
+            var counter=0;
             for (var j = 0; j < innerColorsArray.length; j++) {
                // console.log("we are on innerColorsArray: "+ innerColorsArray);
                 //console.log("we are on innerColorsArray[j: "+innerColorsArray[j])
-                var counter=0;
+
                 // console.log(innerColorsArray)
                  //console.log(colorsObj)
                  //console.log(innerColorsArray[j])
@@ -492,15 +493,15 @@ for (var i =0; i<colorsArray.length; i++){
                         //console.log("we are on index    "+ i,     "    we are on counter: "+ counter);
                     }
                 }
-                if (counter>0){
-                    keepGoing=true;
-                    innerColorsArray=innerColorsTrackerArray;
-
-                } else{
-                    keepGoing=false;
-                }
             }
-            //console.log(innerColorsTrackerArray)
+
+            if (counter>0){
+                keepGoing=true;
+                innerColorsArray=innerColorsTrackerArray;
+
+            } else{
+                keepGoing=false;
+            }
         }
 
         if (innerColorsTrackerArray.indexOf("shiny gold")!==-1){
