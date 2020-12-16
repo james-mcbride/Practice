@@ -47,30 +47,52 @@ var earliestTime= 939
 //var earliestTime=1001938
 var x="x"
 var busArrays = [7,13,x,x,59,x,31,19]
-var busArrays=busArrays.slice(0,5)
+
 //var busArrays= [41,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,37,x,x,x,x,x,431,x,x,x,x,x,x,x,23,x,x,x,x,13,x,x,x,17,x,19,x,x,x,x,x,x,x,x,x,x,x,863,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,29]
 var runningBusArrays=busArrays.filter(function(arrayValue){
     return arrayValue !==x;
 })
 
-var lowest=1000;
-var fastestBus=0;
-for (var i=0; i<runningBusArrays.length; i++){
-    var  busPathTime=runningBusArrays[i]
-    while (busPathTime<earliestTime){
-        busPathTime+=runningBusArrays[i]
-    }
-    var minutesOverArrival=busPathTime-earliestTime;
-    if (minutesOverArrival<lowest){
-        lowest=minutesOverArrival
-        fastestBus=runningBusArrays[i];
-    }
-}
-console.log("fastest bus= " + fastestBus, "time you have to wait= " + lowest)
+// var lowest=1000;
+// var fastestBus=0;
+// for (var i=0; i<runningBusArrays.length; i++){
+//     var  busPathTime=runningBusArrays[i]
+//     while (busPathTime<earliestTime){
+//         busPathTime+=runningBusArrays[i]
+//     }
+//     var minutesOverArrival=busPathTime-earliestTime;
+//     if (minutesOverArrival<lowest){
+//         lowest=minutesOverArrival
+//         fastestBus=runningBusArrays[i];
+//     }
+// }
+// console.log("fastest bus= " + fastestBus, "time you have to wait= " + lowest)
+
+
+var busArrays=busArrays.slice(0,2)
 var finalTime=10;
-var longestBus=Math.max(...runningBusArrays)
-var jumpTime=longestBus-busArrays.indexOf(longestBus)
-var time = jumpTime;
+var time=11;
+while (time<150){
+    for (var i = 0; i < busArrays.length; i++) {
+        if (busArrays[i] === x) {
+            continue;
+        }
+        if ((time+i) %busArrays[i] === 0) {
+            continue
+        } else {
+            break;
+        }
+    }
+    if (i===busArrays.length){
+        console.log(time)
+    }
+    time++
+}
+var jumpTime=time;
+
+busArrays = [7,13,x,x,59,x,31,19]
+finalTime=10;
+time=jumpTime
 while (time!==finalTime){
     for (var i = 0; i < busArrays.length; i++) {
         if (busArrays[i] === x) {
@@ -86,7 +108,7 @@ while (time!==finalTime){
         break
     }
     time+=jumpTime
-    console.log(time)
+    //console.log(time)
 }
 console.log(jumpTime)
 
