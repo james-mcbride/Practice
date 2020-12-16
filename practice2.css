@@ -1,0 +1,45 @@
+@keyframes move {
+    from {
+        background-position: 0px;
+    }
+    to {
+        background-position: 1000px;
+    }
+}
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+
+body, html {
+    overflow:hidden;
+    margin: 0;
+    height: 100%;
+    font-family: 'Lato';
+    font-weight: 700;
+    font-size: 30px;
+    text-transform: uppercase;
+    color: #FFF;
+
+}
+
+.color {
+    width: 20%;
+    height: 100%;
+    float: left
+}
+
+.color p {
+    position: relative;
+    z-index: 1231231;
+    text-align: center;
+    line-height: 90vh;
+}
+
+.color:nth-child(1){
+    background-color: #F5624D;
+}
+
+.sky {
+    height: 100%;
+    color: #FFF;
+    display: block;
+}
