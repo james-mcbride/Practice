@@ -234,30 +234,80 @@
 // Float parameter "bounce" must be greater than 0 and less than 1
 // Float parameter "window" must be less than h.
 // If all three conditions above are fulfilled, return a positive integer, otherwise return -1.
+//
+//
+// function bouncingBall(h,  bounce,  window) {
+//     //checking float parameters
+//     if (h<=0 || bounce <0 || bounce>=1 || window>=h){
+//         return -1
+//     }
+//     //building array to store each bounce's height value
+//     var bounceHeight=[];
+//     //building counter variable to log each time ball passes window. Will be at least once since h must be greater than window.
+//     var bounces =1;
+//     while(h>bounce){
+//         h*=bounce;
+//         bounceHeight.push(h);
+//         console.log(bounceHeight);
+//         if (h>window){
+//             bounces+=2;
+//         }
+//     }
+//     return (bounces)
+//     // your code here
+// }
+//
+// console.log(bouncingBall(30, 0.66, 1.5));
 
+//https://www.codewars.com/kata/51e056fe544cf36c410000fb/train/javascript
 
-function bouncingBall(h,  bounce,  window) {
-    //checking float parameters
-    if (h<=0 || bounce <0 || bounce>=1 || window>=h){
-        return -1
-    }
-    //building array to store each bounce's height value
-    var bounceHeight=[];
-    //building counter variable to log each time ball passes window. Will be at least once since h must be greater than window.
-    var bounces =1;
-    while(h>bounce){
-        h*=bounce;
-        bounceHeight.push(h);
-        console.log(bounceHeight);
-        if (h>window){
-            bounces+=2;
+//Most frequently used words in a
+
+function topThreeWords(text) {
+    text = text.toLowerCase()
+    //split up text into arrays of lower case woreds
+    var wordArray=text.split(/[ ,.:/\\]/)
+    var testRegex = /[a-z]/
+    //creating an object that will store the amount of times each unique word is used.
+    var wordObj = {}
+    for (var i = 0; i < wordArray.length; i++) {
+            if (wordArray[i] === "") {
+
+            } else if(testRegex.test(wordArray[i])===false){
+
+            } else if (wordObj[wordArray[i]] === undefined) {
+                wordObj[wordArray[i]] = 1
+            } else {
+                wordObj[wordArray[i]] = wordObj[wordArray[i]] + 1
+            }
         }
-    }
-    return (bounces)
-    // your code here
+
+        //creating an array that will contain the three highest word counts in descending order
+    var wordObjValues=Object.values(wordObj);
+    wordObjValues.sort(function(a, b){return b-a});
+    var longestThreeWords=wordObjValues.slice(0,3)
+
+        // this variable will store our three most used words in descending orders
+    var finalThreeWords=[];
+
+    //This loop will check our object to see if the word count matches the word, and will add to our finalThreeWords if so. Will check
+    // to make sure the same word is not used twice.
+    for (var i = 0; i < longestThreeWords.length; i++) {
+        for (var key in wordObj) {
+                if (wordObj[key] === longestThreeWords[i] && finalThreeWords.indexOf(key)===-1) {
+                    finalThreeWords.push(key);
+                    break;
+                }
+
+
+            }
+        }
+        return finalThreeWords
+
+
+
 }
 
-console.log(bouncingBall(30, 0.66, 1.5));
-
+console.log(topThreeWords(("  '  ")))
 
 

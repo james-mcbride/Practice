@@ -1000,63 +1000,103 @@
 
 //checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
 
-function checkCashRegister(price, cash, cid) {
-    console.log('1',cid)
-    var changeValueObj={
-        "PENNY": .01,
-        "NICKEL": .05,
-        "DIME": .1,
-        "QUARTER": .25,
-        "ONE": 1,
-        "FIVE": 5,
-        "TEN": 10,
-        "TWENTY": 20,
-        "ONE HUNDRED": 100
-    }
-    var changeDue=cash-price;
-    //console.log(changeDue);
-    //var currentChange=cid.reverse();
-    var array=[]
-    c
-    var currentChange= cid.slice();
-    currentChange.reverse();
-    //console.log(currentChange)
-    var changeGivenArray=[];
+// function checkCashRegister(price, cash, cid) {
+//     console.log('1',cid)
+//     var changeValueObj={
+//         "PENNY": .01,
+//         "NICKEL": .05,
+//         "DIME": .1,
+//         "QUARTER": .25,
+//         "ONE": 1,
+//         "FIVE": 5,
+//         "TEN": 10,
+//         "TWENTY": 20,
+//         "ONE HUNDRED": 100
+//     }
+//     var changeDue=cash-price;
+//     //console.log(changeDue);
+//     //var currentChange=cid.reverse();
+//     var array=[]
+//     c
+//     var currentChange= cid.slice();
+//     currentChange.reverse();
+//     //console.log(currentChange)
+//     var changeGivenArray=[];
+//
+//     for (var i=0; i<currentChange.length; i++){
+//         var changeGiven=0;
+//         //console.log("change due is"+changeDue, "Current change in this specific drawer"+currentChange[i][0]+currentChange[i][1])
+//         while (currentChange[i][1]>0 && changeDue>=changeValueObj[currentChange[i][0]]){
+//             changeDue=(changeDue-changeValueObj[currentChange[i][0]]).toFixed(2)
+//             currentChange[i][1]=parseFloat((currentChange[i][1]-changeValueObj[currentChange[i][0]]).toFixed(2));
+//             changeGiven=Number((changeGiven+Number(changeValueObj[currentChange[i][0]])).toFixed(2));
+//             //console.log(currentChange[i][1])
+//             console.log(changeGiven, cid);
+//         }
+//         //console.log(changeGiven)
+//         if (changeGiven>0) {
+//             changeGivenArray.unshift([currentChange[i][0], changeGiven])
+//         }
+//
+//     }
+//     console.log('2', cid);
+//     var changeNotZeroCounter=0;
+//     for (var i=0; i<currentChange.length; i++){
+//         if (currentChange[i][1]>0){
+//             changeNotZeroCounter++
+//         }
+//     }
+//     if (changeDue>0){
+//        return {status: "INSUFFICIENT_FUNDS", change: []}
+//     } else if (changeNotZeroCounter===0){
+//         //cid[0][1]=0.5
+//         return {status: "CLOSED", change: cid}
+//     } else{
+//
+//         return {status: "OPEN", change: changeGivenArray.reverse()}
+//     }
+// }
 
-    for (var i=0; i<currentChange.length; i++){
-        var changeGiven=0;
-        //console.log("change due is"+changeDue, "Current change in this specific drawer"+currentChange[i][0]+currentChange[i][1])
-        while (currentChange[i][1]>0 && changeDue>=changeValueObj[currentChange[i][0]]){
-            changeDue=(changeDue-changeValueObj[currentChange[i][0]]).toFixed(2)
-            currentChange[i][1]=parseFloat((currentChange[i][1]-changeValueObj[currentChange[i][0]]).toFixed(2));
-            changeGiven=Number((changeGiven+Number(changeValueObj[currentChange[i][0]])).toFixed(2));
-            //console.log(currentChange[i][1])
-            console.log(changeGiven, cid);
-        }
-        //console.log(changeGiven)
-        if (changeGiven>0) {
-            changeGivenArray.unshift([currentChange[i][0], changeGiven])
-        }
+// console.log(checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]));
 
+
+//Basic JavaScript: Counting CardsPassed
+// In the casino game Blackjack, a player can gain an advantage over the house by keeping track of the relative number of high and low cards remaining in the deck. This is called Card Counting.
+//
+// Having more high cards remaining in the deck favors the player. Each card is assigned a value according to the table below. When the count is positive, the player should bet high. When the count is zero or negative, the player should bet low.
+//
+// Count Change	Cards
+// +1	2, 3, 4, 5, 6
+// 0	7, 8, 9
+// -1	10, 'J', 'Q', 'K', 'A'
+// You will write a card counting function. It will receive a card parameter, which can be a number or a string, and increment or decrement the global count variable according to the card's value (see table). The function will then return a string with the current count and the string Bet if the count is positive, or Hold if the count is zero or negative. The current count and the player's decision (Bet or Hold) should be separated by a single space.
+//
+// Example Output
+// -3 Hold
+// 5 Bet
+//
+// Hint
+// Do NOT reset count to 0 when value is 7, 8, or 9.
+// Do NOT return an array.
+// Do NOT include quotes (single or double) in the output.
+
+var count = 0;
+
+function cc(card) {
+    // Only change code below this line
+    var faceCards="JQKA"
+    if (typeof card ==="number"&& card<7){
+        count++
+    } else if (faceCards.indexOf(card)!==-1 || card===10){
+        count--
     }
-    console.log('2', cid);
-    var changeNotZeroCounter=0;
-    for (var i=0; i<currentChange.length; i++){
-        if (currentChange[i][1]>0){
-            changeNotZeroCounter++
-        }
-    }
-    if (changeDue>0){
-       return {status: "INSUFFICIENT_FUNDS", change: []}
-    } else if (changeNotZeroCounter===0){
-        //cid[0][1]=0.5
-        return {status: "CLOSED", change: cid}
+
+    if (count>0){
+        return count + " Bet"
     } else{
-
-        return {status: "OPEN", change: changeGivenArray.reverse()}
+        return count + " Hold"
     }
+    // Only change code above this line
 }
 
-console.log(checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]));
-
-
+console.log(cc(10)); console.log(cc("J")); console.log(cc("Q")); console.log(cc('K')); console.log(cc('A'));
