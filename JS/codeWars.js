@@ -308,6 +308,6 @@ function topThreeWords(text) {
 
 }
 
-console.log(topThreeWords(("  '  ")))
+console.log(topThreeWords(("a a a  b  c c  d d d d  e e e e e")))
 
 
